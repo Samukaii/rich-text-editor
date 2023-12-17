@@ -1,9 +1,23 @@
-<button
-	(click)="bold()"
->
-  Negrito
-</button>
+<div class="editor">
+	<div class="editor__toolbar">
+		@for (format of formats; track format.format) {
+			<div class="editor__format">
+				<button
+					mat-icon-button
+					(click)="applyFormat(format.format)"
+				>
+					<mat-icon>{{ format.icon }}</mat-icon>
+				</button>
+			</div>
+		}
+	</div>
 
-<div #editor [contentEditable]="true" class="editor" >
-	123456789
+	<div
+		id="text-editor"
+		class="editor__content"
+		spellcheck="false"
+		#editor
+		[contentEditable]="true">
+	</div>
 </div>
+

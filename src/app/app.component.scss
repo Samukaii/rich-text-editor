@@ -1,4 +1,41 @@
+:host{
+	display: flex;
+	justify-content: center;
+	padding: 1rem;
+}
+
 .editor {
-  width: 800px;
-  height: 600px;
+	width: 90vw;
+	max-width: 1200px;
+	border-radius: 10px;
+	border: solid 1px gray;
+
+	display: flex;
+	flex-direction: column;
+
+	&__toolbar {
+		border-bottom: solid 1px gray;
+		display: flex;
+	}
+
+	&__format:not(:last-child) {
+		border-right: solid 1px gray;
+	}
+
+	&__content {
+		border-top: none;
+		height: 85vh;
+		outline: none;
+		padding: 1rem;
+	}
+}
+
+::ng-deep {
+	.red {
+		color: red;
+	}
+
+	.blue {
+		color: blue;
+	}
 }
