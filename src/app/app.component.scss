@@ -1,10 +1,11 @@
-:host{
+:host {
 	display: flex;
 	justify-content: center;
 	padding: 1rem;
 }
 
 .editor {
+	$border: gray;
 	width: 90vw;
 	max-width: 1200px;
 	border-radius: 10px;
@@ -14,12 +15,44 @@
 	flex-direction: column;
 
 	&__toolbar {
-		border-bottom: solid 1px gray;
+		border-bottom: solid 1px $border;
 		display: flex;
 	}
 
 	&__format:not(:last-child) {
-		border-right: solid 1px gray;
+		border-right: solid 1px $border;
+	}
+
+	&__format--palette {
+		display: grid;
+		gap: .3rem;
+		width: 200px;
+		padding: .5rem;
+		grid-template-columns: repeat(auto-fill, 25px);
+
+		.color {
+			width: 25px;
+			height: 25px;
+			border: none;
+			cursor: pointer;
+			border-radius: 5px;
+
+			&.red {
+				background-color: red;
+			}
+
+			&.blue {
+				background-color: blue;
+			}
+
+			&.green {
+				background-color: green;
+			}
+
+			&.purple {
+				background-color: purple;
+			}
+		}
 	}
 
 	&__content {
@@ -31,11 +64,21 @@
 }
 
 ::ng-deep {
-	.red {
-		color: red;
-	}
+	.color {
+		&.red {
+			color: red;
+		}
 
-	.blue {
-		color: blue;
+		&.blue {
+			color: blue;
+		}
+
+		&.green {
+			color: green;
+		}
+
+		&.purple {
+			color: purple;
+		}
 	}
 }

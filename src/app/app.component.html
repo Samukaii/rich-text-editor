@@ -1,14 +1,32 @@
 <div class="editor">
 	<div class="editor__toolbar">
-		@for (format of formats; track format.format) {
-			<div class="editor__format">
-				<button
-					mat-icon-button
-					(click)="applyFormat(format.format)"
-				>
-					<mat-icon>{{ format.icon }}</mat-icon>
-				</button>
-			</div>
+		@for (format of formats; track format) {
+			@switch (format.type) {
+				@case ("button") {
+					<div class="editor__format">
+						<button
+							mat-icon-button
+							(click)="applyFormat(format.name)"
+						>
+							<mat-icon>{{ format.icon }}</mat-icon>
+						</button>
+					</div>
+				}
+				@case ("palette") {
+					<div class="editor__format--palette">
+						@for (option of format.options; track option) {
+							<button
+								(click)="applyFormat(option)"
+								matRipple
+								[matRippleColor]="'#fff8'"
+								[matRippleRadius]="50"
+								[class]="getColorClass(option)">
+							</button>
+						}
+					</div>
+				}
+			}
+
 		}
 	</div>
 
