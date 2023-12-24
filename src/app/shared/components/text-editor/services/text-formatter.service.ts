@@ -10,8 +10,9 @@ import { FormatName } from "../models/format.name";
 export class TextFormatterService {
 	document = inject(DOCUMENT);
 	editor = inject(FormatEditorService);
-	emptyTagsException = [
-		"BR",
+	emptyNodeException = [
+		"br",
+		"#text-editor",
 	];
 
 	get currentRange() {
@@ -111,11 +112,17 @@ export class TextFormatterService {
 		}
 	}
 
-	private removeAllEmptyTags(element: Element | ChildNode, exceptions = this.emptyTagsException) {
+	includedInExceptions(node: Node, emptyExceptions = this.emptyNodeException) {
+		return emptyExceptions.some(exception => {
+			return !!node.parentElement?.querySelector(exception)
+		})
+	}
+
+	private removeAllEmptyTags(element: Element | ChildNode, exceptions = this.emptyNodeException) {
 		const children: ChildNode[] = Array.from(element.childNodes);
 
 		if (!children.length) {
-			if(exceptions.includes(element.nodeName))
+			if(this.includedInExceptions(element, exceptions))
 				return;
 			if(!element.textContent)
 				element.remove();

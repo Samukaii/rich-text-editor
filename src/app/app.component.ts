@@ -1,7 +1,6 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { TextFormatterService } from "./shared/components/text-editor/services/text-formatter.service";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
@@ -17,8 +16,6 @@ import { FormatOption } from "./shared/components/text-editor/models/format-opti
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	@ViewChild('editor') editorRef!: ElementRef<HTMLElement>;
-	formatter = inject(TextFormatterService);
 
 	formats: FormatOption[] = [
 		{
@@ -178,8 +175,4 @@ export class AppComponent {
 			]
 		}
 	];
-
-	get editor() {
-		return this.editorRef.nativeElement;
-	}
 }
