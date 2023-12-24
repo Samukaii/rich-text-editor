@@ -1,11 +1,12 @@
 import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
-import { FormatName, TextFormatterService } from "./services/text-formatter.service";
+import { TextFormatterService } from "./services/text-formatter.service";
 import { MatRippleModule } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { FormatOption } from "../../models/format-option";
+import { FormatOption } from "./models/format-option";
 import { TextEditorToolbarComponent } from "./toolbar/text-editor-toolbar.component";
 import { ActiveFormatsService } from "./services/active-formats.service";
+import { FormatName } from "./models/format.name";
 
 @Component({
 	selector: 'app-text-editor',

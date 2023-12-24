@@ -1,17 +1,17 @@
 import { Component, computed, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormatName } from "../services/text-formatter.service";
 import { MatRippleModule } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { FormatOption } from "../../../models/format-option";
+import { FormatOption } from "../models/format-option";
 import { MatSelectModule } from "@angular/material/select";
 import { ActiveFormatsService } from "../services/active-formats.service";
 import { JsonPipe } from "@angular/common";
 import { CallPipe } from "../../../pipes/call.pipe";
 import { ColorPaletteComponent } from "../../color-palette/color-palette.component";
-import { GroupedFormatName } from "../../../models/grouped-format-name";
+import { GroupedFormatName } from "../models/grouped-format-name";
 import { TextEditorColorActionComponent } from "../color-action/text-editor-color-action.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { FormatName } from "../models/format.name";
 
 @Component({
 	selector: 'app-text-editor-toolbar',

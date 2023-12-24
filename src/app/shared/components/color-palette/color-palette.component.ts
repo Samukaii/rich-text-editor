@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
-import { FormatOption } from "../../models/format-option";
-import { GroupedFormatName } from "../../models/grouped-format-name";
+import { FormatOption } from "../text-editor/models/format-option";
+import { GroupedFormatName } from "../text-editor/models/grouped-format-name";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({

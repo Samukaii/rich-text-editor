@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { FormatOption } from "../../../models/format-option";
-import { GroupedFormatName } from "../../../models/grouped-format-name";
+import { FormatOption } from "../models/format-option";
+import { GroupedFormatName } from "../models/grouped-format-name";
 import { ColorPaletteTriggerDirective } from "../../color-palette/color-palette-trigger.directive";
 
 @Component({

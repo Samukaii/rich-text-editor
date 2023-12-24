@@ -6,7 +6,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
 import { TextEditorComponent } from "./shared/components/text-editor/text-editor.component";
-import { FormatOption } from "./shared/models/format-option";
+import { FormatOption } from "./shared/components/text-editor/models/format-option";
 
 
 @Component({

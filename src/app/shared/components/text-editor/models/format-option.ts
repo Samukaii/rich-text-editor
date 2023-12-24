@@ -1,5 +1,5 @@
-import { FormatName } from "../components/text-editor/services/text-formatter.service";
 import { GroupedFormatName } from "./grouped-format-name";
+import { FormatName } from "./format.name";
 
 type AllFormatOptions = [
 	{

@@ -15,8 +15,8 @@ import { OverlayRef } from "@angular/cdk/overlay";
 import { filter, Subscription, take } from "rxjs";
 import { ColorPaletteOverlayService } from "./color-palette-overlay.service";
 import { ColorPaletteComponent } from "./color-palette.component";
-import { FormatOption } from "../../models/format-option";
-import { GroupedFormatName } from "../../models/grouped-format-name";
+import { FormatOption } from "../text-editor/models/format-option";
+import { GroupedFormatName } from "../text-editor/models/grouped-format-name";
 
 @Directive({
 	selector: '[appColorPaletteTrigger]',

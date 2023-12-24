@@ -1,7 +1,7 @@
-import { computed, effect, inject, Injectable, NgZone, signal } from '@angular/core';
+import { computed, inject, Injectable, NgZone, signal } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
-import { FormatName, getNodeFormat, nodeIsFormat, nodeIsSomeValidFormat } from "./text-formatter.service";
-import { range } from "rxjs";
+import { FormatEditorService } from "./format-editor.service";
+import { FormatName } from "../models/format.name";
 
 @Injectable({
 	providedIn: 'root'
@@ -9,6 +9,7 @@ import { range } from "rxjs";
 export class ActiveFormatsService {
 	document = inject(DOCUMENT);
 	zone = inject(NgZone);
+	creator = inject(FormatEditorService);
 
 	currentRange = signal<Range | null>(null);
 	activeFormats = computed<FormatName[]>(() => {
@@ -48,7 +49,7 @@ export class ActiveFormatsService {
 		let parent: Element | null = range.commonAncestorContainer instanceof Element ? range.commonAncestorContainer : range.commonAncestorContainer.parentElement;
 
 		while (parent && parent.id !== "text-editor") {
-			const format = getNodeFormat(parent);
+			const format = this.creator.getNodeFormat(parent);
 			if(format) formats.push(format);
 
 

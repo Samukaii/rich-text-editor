@@ -1,212 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
-import { ActiveFormatsService } from "./active-formats.service";
-import { group } from "@angular/animations";
-import { randomBytes } from "node:crypto";
-
-export type EditorFormat = {
-	name: string;
-	nodeName: string;
-	classes?: string;
-};
-
-const formats = [
-	{
-		name: "bold",
-		nodeName: "STRONG",
-	},
-	{
-		name: "italic",
-		nodeName: "EM",
-	},
-	{
-		name: "strikethrough",
-		nodeName: "S",
-	},
-	{
-		name: "underlined",
-		nodeName: "U",
-	},
-	{
-		name: "align:left",
-		classes: "align left",
-		nodeName: "div",
-	},
-	{
-		name: "align:center",
-		classes: "align center",
-		nodeName: "div",
-	},
-	{
-		name: "align:right",
-		classes: "align right",
-		nodeName: "div",
-	},
-	{
-		name: "align:justify",
-		classes: "align justify",
-		nodeName: "div",
-	},
-	{
-		name: "heading:normal",
-		nodeName: "h1",
-	},
-	{
-		name: "heading:1",
-		nodeName: "h1",
-	},
-	{
-		name: "heading:2",
-		nodeName: "h2",
-	},
-	{
-		name: "heading:3",
-		nodeName: "h3",
-	},
-	{
-		name: "color:red",
-		nodeName: "SPAN",
-		classes: "color red",
-	},
-	{
-		name: "color:blue",
-		nodeName: "SPAN",
-		classes: "color blue",
-	},
-	{
-		name: "color:green",
-		nodeName: "SPAN",
-		classes: "color green",
-	},
-	{
-		name: "color:purple",
-		nodeName: "SPAN",
-		classes: "color purple",
-	},
-	{
-		name: "color:indigo",
-		nodeName: "SPAN",
-		classes: "color indigo",
-	},
-	{
-		name: "color:cyan",
-		nodeName: "SPAN",
-		classes: "color cyan",
-	},
-	{
-		name: "color:orange",
-		nodeName: "SPAN",
-		classes: "color orange",
-	},
-	{
-		name: "color:blueviolet",
-		nodeName: "SPAN",
-		classes: "color blueviolet",
-	},
-	{
-		name: "color:normal",
-		nodeName: "SPAN",
-	},
-	{
-		name: "background-color:red",
-		nodeName: "DIV",
-		classes: "background-color red",
-	},
-	{
-		name: "background-color:blue",
-		nodeName: "DIV",
-		classes: "background-color blue",
-	},
-	{
-		name: "background-color:green",
-		nodeName: "DIV",
-		classes: "background-color green",
-	},
-	{
-		name: "background-color:purple",
-		nodeName: "DIV",
-		classes: "background-color purple",
-	},
-	{
-		name: "background-color:indigo",
-		nodeName: "DIV",
-		classes: "background-color indigo",
-	},
-	{
-		name: "background-color:cyan",
-		nodeName: "DIV",
-		classes: "background-color cyan",
-	},
-	{
-		name: "background-color:orange",
-		nodeName: "DIV",
-		classes: "background-color orange",
-	},
-	{
-		name: "background-color:blueviolet",
-		nodeName: "DIV",
-		classes: "background-color blueviolet",
-	},
-	{
-		name: "background-color:normal",
-		nodeName: "DIV",
-	},
-] as const satisfies Readonly<EditorFormat[]>;
-
-
-export type FormatName = typeof formats[number]["name"];
-
-const getFormat = (formatName: FormatName) => formats.find(format => format.name === formatName);
-
-const createFormatElement = (name: FormatName) => {
-	const format = getFormat(name);
-
-	if (!format)
-		throw new Error(`The name "${name}" is not a valid format`)
-
-	const element = document.createElement(format.nodeName);
-
-	element.id = `editor-action-${format.name}`;
-
-	if ('classes' in format) element.className = format.classes;
-
-	return element;
-}
-
-export const nodeIsSomeValidFormat = (node: Node): node is Element => {
-	if (!(node instanceof Element)) return false;
-
-	return node.id.startsWith("editor-action-");
-}
-
-export const nodeIsFormat = (node: Node, formatName: FormatName) => {
-	if (!nodeIsSomeValidFormat(node)) return false;
-
-	return node.id === `editor-action-${formatName}`;
-}
-
-export const getNodeFormat = (node: Node) => {
-	if (!nodeIsSomeValidFormat(node)) return null;
-
-	return node.id.replace('editor-action-', "") as FormatName;
-}
-
-
-const nodeBelongsToGroup = (node: Node, groupName: string) => {
-	if (!nodeIsSomeValidFormat(node)) return false;
-
-	const id = node.id.replace("editor-action-", "");
-	const [nodeGroupName] = id.split(":");
-
-	return nodeGroupName === groupName;
-}
-
-const getFormatGroup = (formatName: FormatName) => {
-	const parts = formatName.split(":");
-	if (!parts[1]) return;
-
-	return parts[0];
-}
+import { FormatEditorService } from "./format-editor.service";
+import { FormatName } from "../models/format.name";
 
 
 @Injectable({
@@ -214,6 +9,7 @@ const getFormatGroup = (formatName: FormatName) => {
 })
 export class TextFormatterService {
 	document = inject(DOCUMENT);
+	editor = inject(FormatEditorService);
 	emptyTagsException = [
 		"BR",
 	];
@@ -226,21 +22,10 @@ export class TextFormatterService {
 	}
 
 	applyFormat(formatName: FormatName) {
-		const range = this.currentRange;
-		const formatGroup = getFormatGroup(formatName);
+		const formatGroup = this.editor.getFormatGroup(formatName);
 
-		if (!range) return;
-
-		if(formatGroup) {
-			this.applyGroupedFormat(formatName);
-			return;
-		}
-
-		const tagParent = this.findParentFormat(range, formatName);
-
-		if (!tagParent) this.surroundRangeWithFormat(range, formatName);
-		else if (formatGroup) this.overrideRangeWithFormat(range, formatName);
-		else this.removeFormatFromRange(range, formatName);
+		if(formatGroup) this.applyGroupedFormat(formatName);
+		else this.applyNormalFormat(formatName);
 	}
 
 	normalizeElement(element: Element | ChildNode) {
@@ -248,16 +33,53 @@ export class TextFormatterService {
 		this.removeAllEmptyTags(element);
 	}
 
+	private copyElementFromRange(range: Range, elementLimit: HTMLElement) {
+		const nodes: Node[] = [];
+		let first: Node | null = null;
+
+		let parent: Node | null = range.commonAncestorContainer;
+
+		while (parent && !nodes.includes(elementLimit)) {
+			nodes.push(parent);
+
+			const clone = parent.cloneNode();
+			clone.childNodes.forEach(child => child.remove());
+
+			if(clone instanceof Element) {
+				if(first) clone.appendChild(first)
+				else if(parent instanceof Element){
+					clone.appendChild(range.cloneContents())
+				}
+				first = clone;
+			}
+
+			parent = parent.parentElement;
+		}
+
+		return first as Node;
+	}
+
+	private applyNormalFormat(formatName: FormatName) {
+		const range = this.currentRange;
+
+		if (!range) return;
+
+		const alreadyFormatted = !!this.findParentFormat(range, formatName);
+
+		if (!alreadyFormatted) this.surroundRangeWithFormat(range, formatName);
+		else this.removeFormatFromRange(range, formatName);
+	}
+
 	private applyGroupedFormat(formatName: FormatName) {
 		const range = this.currentRange;
-		const formatGroup = getFormatGroup(formatName);
+		const formatGroup = this.editor.getFormatGroup(formatName);
 
 		if (!range || !formatGroup) return;
 
 		const tagParent = this.findAnyParentFormatOfGroup(range, formatGroup)
-		const isNormalFormat = formatName.endsWith(":normal");
+		const shouldRevertFormat = formatName.endsWith(":normal");
 
-		if(isNormalFormat) {
+		if(shouldRevertFormat) {
 			this.removeGroupFormatFromRange(range, formatGroup);
 			return;
 		}
@@ -315,13 +137,13 @@ export class TextFormatterService {
 	}
 
 	private surroundRangeWithFormat(range: Range, formatName: FormatName) {
-		const newTagParent = createFormatElement(formatName);
+		const newTagParent = this.editor.createElement(formatName);
 		const content = range.extractContents();
 
-		const group = getFormatGroup(formatName);
+		const group = this.editor.getFormatGroup(formatName);
 
 		if(group) this.removeFormatGroupFromChildren(content, group)
-		else this.removeFormatFromTag(content, formatName);
+		else this.removeFormatFromElement(content, formatName);
 
 		newTagParent.append(content)
 
@@ -330,18 +152,18 @@ export class TextFormatterService {
 	}
 
 	private overrideRangeWithFormat(range: Range, formatName: FormatName) {
-		const group = getFormatGroup(formatName);
+		const group = this.editor.getFormatGroup(formatName);
 
 		if(!group) return;
 
 		const tagParent = this.findAnyParentFormatOfGroup(range, group);
 		if (!tagParent) return;
 
-		const formatTag = createFormatElement(formatName);
+		const formatTag = this.editor.createElement(formatName);
 
-		const [start, rangeContent, end] = this.splitRangeInElement(tagParent, range);
+		const {start, currentRange, end} = this.splitRangeInElement(tagParent, range);
 
-		formatTag.append(...Array.from(rangeContent!.childNodes));
+		formatTag.append(...Array.from(currentRange.childNodes));
 
 		const newChildren: Node[] = [formatTag];
 
@@ -358,9 +180,9 @@ export class TextFormatterService {
 
 		if (!tagParent) return;
 
-		const [start, rangeContent, end] = this.splitRangeInElement(tagParent, range);
+		const {start, currentRange, end} = this.splitRangeInElement(tagParent, range);
 
-		const newChildren = [start, ...Array.from(rangeContent!.childNodes), end];
+		const newChildren = [start, ...Array.from(currentRange.childNodes), end];
 
 		const onlyNotNull = newChildren.filter(
 			(child): child is DocumentFragment => !!child
@@ -381,11 +203,11 @@ export class TextFormatterService {
 			return
 		}
 
-		const [start, rangeContent, end] = this.splitRangeInElement(tagParent, range);
+		const {start, currentRange, end} = this.splitRangeInElement(tagParent, range);
 
-		this.removeFormatGroupFromChildren(rangeContent!, groupName);
+		this.removeFormatGroupFromChildren(currentRange, groupName);
 
-		const newChildren = [start, ...Array.from(rangeContent!.childNodes), end];
+		const newChildren = [start, ...Array.from(currentRange!.childNodes), end];
 
 		const onlyNotNull = newChildren.filter(
 			(child): child is DocumentFragment => !!child
@@ -404,7 +226,7 @@ export class TextFormatterService {
 		endRange.setStart(range.endContainer, range.endOffset);
 		endRange.setEndAfter(element);
 
-		const rangeContent = this.isolateRange(range, element);
+		const rangeContent = this.copyElementFromRange(range, element);
 
 		const startContent = startRange.toString()
 			? startRange.cloneContents()
@@ -413,42 +235,19 @@ export class TextFormatterService {
 			? endRange.cloneContents()
 			: null;
 
-
-		return [startContent, rangeContent, endContent];
-	}
-
-	isolateRange(range: Range, elementLimit: HTMLElement) {
-		const nodes: Node[] = [];
-		let first: Node | null = null;
-
-		let parent: Node | null = range.commonAncestorContainer;
-
-		while (parent && !nodes.includes(elementLimit)) {
-			nodes.push(parent);
-
-			const clone = parent.cloneNode();
-			clone.childNodes.forEach(child => child.remove());
-
-			if(clone instanceof Element) {
-				if(first) clone.appendChild(first)
-				else if(parent instanceof Element){
-					clone.appendChild(range.cloneContents())
-				}
-				first = clone;
-			}
-
-			parent = parent.parentElement;
+		return {
+			start: startContent,
+			currentRange: rangeContent,
+			end: endContent,
 		}
-
-		return first as Node;
 	}
 
 	private findParentFormat(range: Range, actionName: FormatName) {
 		const ancestor = range.commonAncestorContainer;
 
-		if (nodeIsFormat(ancestor, actionName)) return ancestor as HTMLElement;
+		if (this.editor.nodeIsFormat(ancestor, actionName)) return ancestor as HTMLElement;
 
-		if (ancestor.parentElement && nodeIsFormat(ancestor.parentElement, actionName))
+		if (ancestor.parentElement && this.editor.nodeIsFormat(ancestor.parentElement, actionName))
 			return ancestor.parentElement
 
 		let parent = range.commonAncestorContainer.parentElement;
@@ -457,7 +256,7 @@ export class TextFormatterService {
 		while (parent?.parentElement) {
 			parent = parent?.parentElement!;
 
-			if (nodeIsFormat(parent, actionName))
+			if (this.editor.nodeIsFormat(parent, actionName))
 				boldElement = parent;
 		}
 
@@ -467,35 +266,35 @@ export class TextFormatterService {
 	private findAnyParentFormatOfGroup(range: Range, groupName: string) {
 		const ancestor = range.commonAncestorContainer;
 
-		if (nodeBelongsToGroup(ancestor, groupName)) return ancestor as HTMLElement;
+		if (this.editor.nodeBelongsToFormatGroup(ancestor, groupName)) return ancestor as HTMLElement;
 
-		if (ancestor.parentElement && nodeBelongsToGroup(ancestor.parentElement, groupName))
+		if (ancestor.parentElement && this.editor.nodeBelongsToFormatGroup(ancestor.parentElement, groupName))
 			return ancestor.parentElement
 
 		let parent = range.commonAncestorContainer.parentElement;
-		let boldElement: HTMLElement | null = null;
+		let elementWithFormat: HTMLElement | null = null;
 
 		while (parent?.parentElement) {
 			parent = parent?.parentElement!;
 
-			if (nodeBelongsToGroup(parent, groupName))
-				boldElement = parent;
+			if (this.editor.nodeBelongsToFormatGroup(parent, groupName))
+				elementWithFormat = parent;
 		}
 
-		return boldElement;
+		return elementWithFormat;
 	}
 
-	private removeFormatFromTag(element: DocumentFragment | Element, actionName: FormatName) {
+	private removeFormatFromElement(element: DocumentFragment | Element, formatName: FormatName) {
 		const children: Element[] = Array.from(element.children);
 
 		if (!children.length) return;
 
 		children.forEach(child => {
-			if (nodeIsFormat(child, actionName)) {
+			if (this.editor.nodeIsFormat(child, formatName)) {
 				child.replaceWith(...Array.from(child.childNodes))
 			}
 
-			return this.removeFormatFromTag(child, actionName)
+			return this.removeFormatFromElement(child, formatName)
 		});
 	}
 
@@ -507,7 +306,7 @@ export class TextFormatterService {
 		if (!children.length) return;
 
 		children.forEach(child => {
-			if (nodeBelongsToGroup(child, groupName)) {
+			if (this.editor.nodeBelongsToFormatGroup(child, groupName)) {
 				child.replaceWith(...Array.from(child.childNodes))
 			}
 
