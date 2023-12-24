@@ -1,0 +1,14 @@
+<div class="editor">
+	<app-text-editor-toolbar
+		[formats]="formats"
+		(formatClick)="applyFormat($event)"
+	/>
+	<div
+		id="text-editor"
+		class="editor__content"
+		spellcheck="false"
+		#editor
+		[contentEditable]="true">
+	</div>
+</div>
+

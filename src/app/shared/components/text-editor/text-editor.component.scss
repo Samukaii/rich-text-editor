@@ -1,0 +1,93 @@
+.editor {
+	$border: gray;
+	width: 90vw;
+	max-width: 1200px;
+	border-radius: 10px;
+	border: solid 1px gray;
+
+	display: flex;
+	flex-direction: column;
+
+	&__content {
+		border-top: none;
+		height: 85vh;
+		outline: none;
+		padding: 1rem;
+	}
+}
+
+::ng-deep #text-editor {
+	.color {
+		&.red {
+			color: red;
+		}
+		&.blue {
+			color: blue;
+		}
+		&.green {
+			color: green;
+		}
+		&.purple {
+			color: purple;
+		}
+		&.indigo {
+			color: indigo;
+		}
+		&.cyan {
+			color: cyan;
+		}
+		&.orange {
+			color: orange;
+		}
+		&.blueviolet {
+			color: blueviolet;
+		}
+	}
+
+	.background-color {
+		display: inline-flex;
+		&.red {
+			background-color: red;
+		}
+		&.blue {
+			background-color: blue;
+		}
+		&.green {
+			background-color: green;
+		}
+		&.purple {
+			background-color: purple;
+		}
+		&.indigo {
+			background-color: indigo;
+		}
+		&.cyan {
+			background-color: cyan;
+		}
+		&.orange {
+			background-color: orange;
+		}
+		&.blueviolet {
+			background-color: blueviolet;
+		}
+	}
+
+	.align {
+		&.left {
+			width: 100%;
+			text-align: left;
+		}
+		&.center {
+			width: 100%;
+			text-align: center;
+		}
+		&.right {
+			width: 100%;
+			text-align: right;
+		}
+		&.justify {
+			width: 100%;
+			text-align: justify;
+		}
+	}
+}

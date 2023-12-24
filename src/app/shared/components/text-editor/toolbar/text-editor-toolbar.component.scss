@@ -1,0 +1,29 @@
+$border: gray;
+
+.toolbar {
+	border-bottom: solid 1px $border;
+	display: flex;
+
+	&__action {
+		display: flex;
+		align-items: center;
+
+		&--active {
+			color: var(--mdc-checkbox-selected-icon-color);
+		}
+
+		&:not(:last-child) {
+			border-right: solid 1px $border;
+		}
+
+		&--select {
+			width: 180px;
+			margin-left: .5rem;
+			mat-form-field {
+				position: relative;
+				top: .6rem;
+				width: 100%;
+			}
+		}
+	}
+}

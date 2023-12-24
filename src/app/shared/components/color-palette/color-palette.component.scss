@@ -1,0 +1,86 @@
+:host {
+	transition: .5s;
+	width: fit-content;
+	height: fit-content;
+	z-index: 0;
+	border-radius: 6px;
+	transform-origin: center center;
+	background-color: white;
+	box-shadow: #00000075 1px 5px 17px 0;
+	white-space: normal;
+	box-sizing: border-box;
+	padding: .8rem;
+}
+
+.palette {
+	display: grid;
+	gap: .3rem;
+	width: 204px;
+	padding: .5rem;
+	grid-template-columns: repeat(auto-fill, 25px);
+
+	.color {
+		width: 25px;
+		height: 25px;
+		border: none;
+		cursor: pointer;
+		border-radius: 5px;
+		box-sizing: border-box;
+
+		mat-icon {
+			color: white;
+		}
+
+		&.red {
+			background-color: red;
+		}
+
+		&.blue {
+			background-color: blue;
+		}
+
+		&.green {
+			background-color: green;
+		}
+
+		&.purple {
+			background-color: purple;
+		}
+
+		&.indigo {
+			background-color: indigo;
+		}
+
+		&.cyan {
+			background-color: cyan;
+
+			mat-icon {
+				color: black;
+			}
+		}
+
+		&.orange {
+			background-color: orange;
+		}
+
+		&.blueviolet {
+			background-color: blueviolet;
+		}
+
+		&.normal {
+			border: solid 1px black;
+
+			mat-icon {
+				color: red;
+			}
+
+			&.palette__color--active {
+				color: green;
+
+				mat-icon {
+					color: green;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,24 @@
+<div class="palette">
+	@for (color of colors;track color) {
+		<div
+			[matTooltip]="color.tooltip"
+			[class.palette__color--active]="color.name === selected"
+			(click)="colorClick.emit(color.name)"
+			(mousedown)="$event.preventDefault();"
+			matRipple
+			[matRippleColor]="'#fff8'"
+			[matRippleRadius]="50"
+			[class]="getColorClass(color.name)">
+
+			@if (color.name === selected) {
+				<mat-icon>
+					check
+				</mat-icon>
+			} @else if (color.name.endsWith(":normal")) {
+				<mat-icon>
+					close
+				</mat-icon>
+			}
+		</div>
+	}
+</div>

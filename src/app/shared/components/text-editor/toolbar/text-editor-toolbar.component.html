@@ -1,0 +1,46 @@
+<div class="toolbar">
+	@for (format of formats;track format) {
+		@switch (format.type) {
+			@case ("button") {
+				<div class="toolbar__action">
+					<button
+						[matTooltip]="format.tooltip"
+						(mousedown)="$event.preventDefault()"
+						[class.toolbar__action--active]="isFormatActive | call: actives() : format.name"
+						mat-icon-button
+						(click)="formatClick.emit(format.name)"
+					>
+						<mat-icon>{{ format.icon }}</mat-icon>
+					</button>
+				</div>
+			}
+			@case ("palette") {
+				<app-text-editor-color-action
+					class="toolbar__action"
+					[colors]="format.options"
+					[matTooltip]="format.tooltip"
+					[icon]="format.icon"
+					[selected]="formatGroupActive | call: actives() : format"
+					(formatClick)="formatClick.emit($event)"
+				/>
+			}
+			@case ("select") {
+				<div class="toolbar__action--select">
+					<mat-form-field (mousedown)="$event.preventDefault(); $event.stopPropagation()" appearance="fill">
+						<mat-label>{{ format.label }}</mat-label>
+						<mat-select [value]="formatGroupActive | call: actives() : format">
+							@for (option of format.options;track option.name) {
+								<mat-option
+									(click)="formatClick.emit(option.name)"
+									[value]="option.name">
+									{{ option.label }}
+								</mat-option>
+							}
+						</mat-select>
+					</mat-form-field>
+				</div>
+			}
+		}
+
+	}
+</div>
