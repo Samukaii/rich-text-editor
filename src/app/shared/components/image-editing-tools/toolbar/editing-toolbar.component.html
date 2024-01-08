@@ -1,0 +1,12 @@
+@for (button of overlayData.actions(); track button) {
+	<button
+		[matTooltip]="button.tooltip"
+		(mousedown)="$event.preventDefault()"
+		[class.active]="button.active"
+		color="secondary"
+		mat-icon-button
+		(click)="button.click()"
+	>
+		<mat-icon>{{ button.icon }}</mat-icon>
+	</button>
+}

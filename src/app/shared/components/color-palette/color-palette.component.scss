@@ -31,43 +31,7 @@
 			color: white;
 		}
 
-		&.red {
-			background-color: red;
-		}
-
-		&.blue {
-			background-color: blue;
-		}
-
-		&.green {
-			background-color: green;
-		}
-
-		&.purple {
-			background-color: purple;
-		}
-
-		&.indigo {
-			background-color: indigo;
-		}
-
-		&.cyan {
-			background-color: cyan;
-
-			mat-icon {
-				color: black;
-			}
-		}
-
-		&.orange {
-			background-color: orange;
-		}
-
-		&.blueviolet {
-			background-color: blueviolet;
-		}
-
-		&.normal {
+		&.remove {
 			border: solid 1px black;
 
 			mat-icon {

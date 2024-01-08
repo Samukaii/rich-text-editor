@@ -4,14 +4,19 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { FormatOption } from "../models/format-option";
 import { MatSelectModule } from "@angular/material/select";
-import { ActiveFormatsService } from "../services/active-formats.service";
+import { ActiveFormat, ActiveFormatsService } from "../services/active-formats.service";
 import { JsonPipe } from "@angular/common";
 import { CallPipe } from "../../../pipes/call.pipe";
 import { ColorPaletteComponent } from "../../color-palette/color-palette.component";
 import { GroupedFormatName } from "../models/grouped-format-name";
-import { TextEditorColorActionComponent } from "../color-action/text-editor-color-action.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { FormatName } from "../models/format.name";
+import {
+	AppTextEditorOverlayActionDirective
+} from "../app-text-editor-overlay-action/app-text-editor-overlay-action.directive";
+import {
+	AppTextEditorSelectActionComponent
+} from "./app-text-editor-select-action/app-text-editor-select-action.component";
 
 @Component({
 	selector: 'app-text-editor-toolbar',
@@ -24,8 +29,9 @@ import { FormatName } from "../models/format.name";
 		JsonPipe,
 		CallPipe,
 		ColorPaletteComponent,
-		TextEditorColorActionComponent,
-		MatTooltipModule
+		MatTooltipModule,
+		AppTextEditorOverlayActionDirective,
+		AppTextEditorSelectActionComponent
 	],
 	templateUrl: './text-editor-toolbar.component.html',
 	styleUrl: './text-editor-toolbar.component.scss'
@@ -33,20 +39,12 @@ import { FormatName } from "../models/format.name";
 export class TextEditorToolbarComponent implements OnInit {
 	activeFormatsService = inject(ActiveFormatsService);
 	@Input() formats: FormatOption[] = [];
-	@Output() formatClick = new EventEmitter<FormatName>();
+	@Output() formatClick = new EventEmitter<GroupedFormatName>();
 
 	actives = computed(() => this.activeFormatsService.activeFormats());
 
-	isFormatActive(actives: FormatName[], name: FormatName) {
-		return actives.includes(name);
-	}
-
-	formatGroupActive(actives: FormatName[], format: FormatOption<2> | FormatOption<1>): GroupedFormatName {
-		const [group] = format.options[0].name.split(":");
-
-		const active =  actives.find(active => active.startsWith(group)) || `${group}:normal`
-
-		return active as GroupedFormatName;
+	isFormatActive(actives: ActiveFormat[], name: FormatName) {
+		return actives.find(format => format.name === name);
 	}
 
 	ngOnInit() {

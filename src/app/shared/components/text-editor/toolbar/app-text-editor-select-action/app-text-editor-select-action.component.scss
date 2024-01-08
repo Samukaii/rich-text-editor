@@ -1,0 +1,13 @@
+$border: gray;
+
+
+.toolbar__action--select {
+	width: 180px;
+	margin-left: .5rem;
+
+	mat-form-field {
+		position: relative;
+		top: .6rem;
+		width: 100%;
+	}
+}

@@ -4,15 +4,17 @@
 	max-width: 1200px;
 	border-radius: 10px;
 	border: solid 1px gray;
+	box-sizing: border-box;
 
 	display: flex;
 	flex-direction: column;
 
 	&__content {
 		border-top: none;
-		height: 85vh;
+		height: fit-content;
+		min-height: 85vh;
 		outline: none;
-		padding: 1rem;
+		padding: 2rem;
 	}
 }
 

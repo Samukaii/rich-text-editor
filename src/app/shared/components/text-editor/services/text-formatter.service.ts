@@ -1,18 +1,40 @@
 import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
-import { FormatEditorService } from "./format-editor.service";
+import { FormatHelperService } from "./format-helper.service";
 import { FormatName } from "../models/format.name";
+import { Generic } from "../models/generic";
+import { EditorEventsService } from "./editor-events.service";
+import { ActiveFormatsService } from "./active-formats.service";
 
+export const deepCompareObjects = (first: Generic, second: Generic, depth = 1): boolean => {
+	const firstEntries = Object.entries(first);
+	const secondEntries = Object.entries(second);
+
+	if(firstEntries === secondEntries) return true;
+	if(firstEntries.length !== secondEntries.length) return false;
+
+	if(depth === 0) return false;
+
+	return firstEntries.every(([key, value]) => {
+		if(typeof value !== second[key]) return false;
+		if(typeof value !== "object") return value === second[key];
+
+		return deepCompareObjects(value, second[key], depth - 1);
+	})
+}
 
 @Injectable({
 	providedIn: 'root'
 })
 export class TextFormatterService {
 	document = inject(DOCUMENT);
-	editor = inject(FormatEditorService);
+	helper = inject(FormatHelperService);
+	editor = inject(EditorEventsService);
+	activeFormats = inject(ActiveFormatsService);
 	emptyNodeException = [
 		"br",
 		"#text-editor",
+		"img"
 	];
 
 	get currentRange() {
@@ -22,11 +44,32 @@ export class TextFormatterService {
 		return selection.getRangeAt(0);
 	}
 
-	applyFormat(formatName: FormatName) {
-		const formatGroup = this.editor.getFormatGroup(formatName);
+	applyFormat(formatName: FormatName, options?: Generic) {
+		const format = this.helper.getFormat(formatName);
 
-		if(formatGroup) this.applyGroupedFormat(formatName);
-		else this.applyNormalFormat(formatName);
+		if(!format) return;
+
+		switch (format.insertionStrategy) {
+			case "surround-selection":
+				this.applyNormalFormat(formatName, options);
+				break;
+			case "insert-in-new-line":
+				this.insert(formatName, options);
+				break;
+		}
+	}
+
+	removeFormat(formatName: FormatName) {
+		const range = this.currentRange;
+		if (!range) return;
+
+		this.removeFormatFromRange(range, formatName);
+	}
+
+	insert(formatName: FormatName, options?: Generic) {
+		const element = this.helper.createElement(formatName, options);
+
+		this.currentRange?.insertNode(element);
 	}
 
 	normalizeElement(element: Element | ChildNode) {
@@ -60,33 +103,19 @@ export class TextFormatterService {
 		return first as Node;
 	}
 
-	private applyNormalFormat(formatName: FormatName) {
+	private applyNormalFormat(formatName: FormatName, options?: Generic) {
 		const range = this.currentRange;
+		const format = this.helper.getFormat(formatName);
 
-		if (!range) return;
+		if (!range || !format) return;
 
 		const alreadyFormatted = !!this.findParentFormat(range, formatName);
 
-		if (!alreadyFormatted) this.surroundRangeWithFormat(range, formatName);
-		else this.removeFormatFromRange(range, formatName);
-	}
-
-	private applyGroupedFormat(formatName: FormatName) {
-		const range = this.currentRange;
-		const formatGroup = this.editor.getFormatGroup(formatName);
-
-		if (!range || !formatGroup) return;
-
-		const tagParent = this.findAnyParentFormatOfGroup(range, formatGroup)
-		const shouldRevertFormat = formatName.endsWith(":normal");
-
-		if(shouldRevertFormat) {
-			this.removeGroupFormatFromRange(range, formatGroup);
-			return;
+		if(alreadyFormatted) {
+			if('autoRemove' in format) this.removeFormat(formatName);
+			else this.overrideRangeWithFormat(range, formatName, options);
 		}
-
-		if (!tagParent) this.surroundRangeWithFormat(range, formatName);
-		else this.overrideRangeWithFormat(range, formatName);
+		else this.surroundRangeWithFormat(range, formatName, options);
 	}
 
 	private mergeAllAdjacentElements(element: Element | ChildNode) {
@@ -103,7 +132,7 @@ export class TextFormatterService {
 			if (!(currentChild instanceof Element) || !(nextChild instanceof Element)) {
 				currentChild = currentChild.nextSibling;
 			}
-			else if (currentChild.id && nextChild.id && currentChild.id === nextChild.id){
+			else if (this.helper.hasSameFormat(currentChild, nextChild)){
 				this.mergeChildren(currentChild, nextChild);
 			}
 			else currentChild = currentChild.nextSibling;
@@ -114,7 +143,9 @@ export class TextFormatterService {
 
 	includedInExceptions(node: Node, emptyExceptions = this.emptyNodeException) {
 		return emptyExceptions.some(exception => {
-			return !!node.parentElement?.querySelector(exception)
+			if(!(node instanceof HTMLElement)) return;
+
+			return node.matches(exception)
 		})
 	}
 
@@ -143,11 +174,11 @@ export class TextFormatterService {
 		first.normalize();
 	}
 
-	private surroundRangeWithFormat(range: Range, formatName: FormatName) {
-		const newTagParent = this.editor.createElement(formatName);
+	private surroundRangeWithFormat(range: Range, formatName: FormatName, options?: Generic) {
+		const newTagParent = this.helper.createElement(formatName, options);
 		const content = range.extractContents();
 
-		const group = this.editor.getFormatGroup(formatName);
+		const group = this.helper.getFormatGroup(formatName);
 
 		if(group) this.removeFormatGroupFromChildren(content, group)
 		else this.removeFormatFromElement(content, formatName);
@@ -158,19 +189,16 @@ export class TextFormatterService {
 		range.selectNodeContents(newTagParent);
 	}
 
-	private overrideRangeWithFormat(range: Range, formatName: FormatName) {
-		const group = this.editor.getFormatGroup(formatName);
-
-		if(!group) return;
-
-		const tagParent = this.findAnyParentFormatOfGroup(range, group);
+	private overrideRangeWithFormat(range: Range, formatName: FormatName, options?: Generic) {
+		const tagParent = this.findParentFormat(range, formatName);
 		if (!tagParent) return;
 
-		const formatTag = this.editor.createElement(formatName);
+		const formatTag = this.helper.createElement(formatName, options);
 
 		const {start, currentRange, end} = this.splitRangeInElement(tagParent, range);
 
 		formatTag.append(...Array.from(currentRange.childNodes));
+		this.removeFormatFromElement(formatTag, formatName);
 
 		const newChildren: Node[] = [formatTag];
 
@@ -252,9 +280,9 @@ export class TextFormatterService {
 	private findParentFormat(range: Range, actionName: FormatName) {
 		const ancestor = range.commonAncestorContainer;
 
-		if (this.editor.nodeIsFormat(ancestor, actionName)) return ancestor as HTMLElement;
+		if (this.helper.nodeIsFormat(ancestor, actionName)) return ancestor as HTMLElement;
 
-		if (ancestor.parentElement && this.editor.nodeIsFormat(ancestor.parentElement, actionName))
+		if (ancestor.parentElement && this.helper.nodeIsFormat(ancestor.parentElement, actionName))
 			return ancestor.parentElement
 
 		let parent = range.commonAncestorContainer.parentElement;
@@ -263,7 +291,7 @@ export class TextFormatterService {
 		while (parent?.parentElement) {
 			parent = parent?.parentElement!;
 
-			if (this.editor.nodeIsFormat(parent, actionName))
+			if (this.helper.nodeIsFormat(parent, actionName))
 				boldElement = parent;
 		}
 
@@ -273,9 +301,9 @@ export class TextFormatterService {
 	private findAnyParentFormatOfGroup(range: Range, groupName: string) {
 		const ancestor = range.commonAncestorContainer;
 
-		if (this.editor.nodeBelongsToFormatGroup(ancestor, groupName)) return ancestor as HTMLElement;
+		if (this.helper.nodeBelongsToFormatGroup(ancestor, groupName)) return ancestor as HTMLElement;
 
-		if (ancestor.parentElement && this.editor.nodeBelongsToFormatGroup(ancestor.parentElement, groupName))
+		if (ancestor.parentElement && this.helper.nodeBelongsToFormatGroup(ancestor.parentElement, groupName))
 			return ancestor.parentElement
 
 		let parent = range.commonAncestorContainer.parentElement;
@@ -284,7 +312,7 @@ export class TextFormatterService {
 		while (parent?.parentElement) {
 			parent = parent?.parentElement!;
 
-			if (this.editor.nodeBelongsToFormatGroup(parent, groupName))
+			if (this.helper.nodeBelongsToFormatGroup(parent, groupName))
 				elementWithFormat = parent;
 		}
 
@@ -297,7 +325,7 @@ export class TextFormatterService {
 		if (!children.length) return;
 
 		children.forEach(child => {
-			if (this.editor.nodeIsFormat(child, formatName)) {
+			if (this.helper.nodeIsFormat(child, formatName)) {
 				child.replaceWith(...Array.from(child.childNodes))
 			}
 
@@ -313,7 +341,7 @@ export class TextFormatterService {
 		if (!children.length) return;
 
 		children.forEach(child => {
-			if (this.editor.nodeBelongsToFormatGroup(child, groupName)) {
+			if (this.helper.nodeBelongsToFormatGroup(child, groupName)) {
 				child.replaceWith(...Array.from(child.childNodes))
 			}
 

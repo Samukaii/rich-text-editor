@@ -1,7 +1,13 @@
 import { computed, inject, Injectable, NgZone, signal } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
-import { FormatEditorService } from "./format-editor.service";
+import { FormatHelperService } from "./format-helper.service";
 import { FormatName } from "../models/format.name";
+import { Generic } from "../models/generic";
+
+export interface ActiveFormat {
+	name: string;
+	options?: Generic;
+}
 
 @Injectable({
 	providedIn: 'root'
@@ -9,10 +15,10 @@ import { FormatName } from "../models/format.name";
 export class ActiveFormatsService {
 	document = inject(DOCUMENT);
 	zone = inject(NgZone);
-	creator = inject(FormatEditorService);
+	helper = inject(FormatHelperService);
 
 	currentRange = signal<Range | null>(null);
-	activeFormats = computed<FormatName[]>(() => {
+	activeFormats = computed<ActiveFormat[]>(() => {
 		const currentRange = this.currentRange();
 
 		if (!currentRange) return [];
@@ -25,7 +31,7 @@ export class ActiveFormatsService {
 			this.document.addEventListener('selectionchange', () => {
 				this.zone.run(() => {
 					this.updateActiveFormats();
-								})
+				})
 			})
 		})
 	}
@@ -43,19 +49,20 @@ export class ActiveFormatsService {
 		return selection.getRangeAt(0)?.cloneRange();
 	}
 
-	private getFormats(range: Range) {
-		let formats: FormatName[] = [];
+	getFormats(range: Range) {
+		let formats: ActiveFormat[] = [];
 
 		let parent: Element | null = range.commonAncestorContainer instanceof Element ? range.commonAncestorContainer : range.commonAncestorContainer.parentElement;
 
 		while (parent && parent.id !== "text-editor") {
-			const format = this.creator.getNodeFormat(parent);
-			if(format) formats.push(format);
+			const name = this.helper.getNodeFormat(parent);
+			const options = this.helper.getNodeFormatOptions(parent);
 
+
+			if(name) formats.push({name, options});
 
 			parent = parent.parentElement;
 		}
-
 
 		return formats;
 	}

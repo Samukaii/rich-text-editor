@@ -5,7 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
 import { TextEditorComponent } from "./shared/components/text-editor/text-editor.component";
-import { FormatOption } from "./shared/components/text-editor/models/format-option";
+import { createPaletteOverlay, FormatOption } from "./shared/components/text-editor/models/format-option";
 
 
 @Component({
@@ -43,90 +43,18 @@ export class AppComponent {
 			name: "underlined",
 		},
 		{
-			type: "palette",
+			type: "overlay",
 			icon: "format_color_text",
 			tooltip: "Cor do texto",
-			options: [
-				{
-					tooltip: "Vermelho",
-					name: "color:red"
-				},
-				{
-					tooltip: "Laranja",
-					name: "color:orange"
-				},
-				{
-					tooltip: "Verde",
-					name: "color:green"
-				},
-				{
-					tooltip: "Ciano",
-					name: "color:cyan"
-				},
-				{
-					tooltip: "Azul",
-					name: "color:blue"
-				},
-				{
-					tooltip: "Índigo",
-					name: "color:indigo"
-				},
-				{
-					tooltip: "Violeta",
-					name: "color:blueviolet"
-				},
-				{
-					tooltip: "Púrpura",
-					name: "color:purple"
-				},
-				{
-					tooltip: "Sem cor",
-					name: "color:normal"
-				},
-			]
+			name: "color",
+			overlay: createPaletteOverlay("color"),
 		},
 		{
-			type: "palette",
+			type: "overlay",
 			icon: "format_color_fill",
 			tooltip: "Cor de fundo",
-			options: [
-				{
-					tooltip: "Vermelho",
-					name: "background-color:red"
-				},
-				{
-					tooltip: "Laranja",
-					name: "background-color:orange"
-				},
-				{
-					tooltip: "Verde",
-					name: "background-color:green"
-				},
-				{
-					tooltip: "Ciano",
-					name: "background-color:cyan"
-				},
-				{
-					tooltip: "Azul",
-					name: "background-color:blue"
-				},
-				{
-					tooltip: "Índigo",
-					name: "background-color:indigo"
-				},
-				{
-					tooltip: "Violeta",
-					name: "background-color:blueviolet"
-				},
-				{
-					tooltip: "Púrpura",
-					name: "background-color:purple"
-				},
-				{
-					tooltip: "Sem cor",
-					name: "background-color:normal"
-				},
-			]
+			name: "background-color",
+			overlay: createPaletteOverlay("background-color"),
 		},
 		{
 			type: "button",
@@ -154,25 +82,40 @@ export class AppComponent {
 		},
 		{
 			type: "select",
+			name: "heading",
 			label: "Título",
-			options: [
+			items: [
 				{
-					name: "heading:normal",
-					label: "Texto normal"
-				},
-				{
-					name: "heading:1",
+					options: {level: 1},
 					label: "Título 1"
 				},
 				{
-					name: "heading:2",
+					options: {level: 2},
 					label: "Título 2"
 				},
 				{
-					name: "heading:3",
+					options: {level: 3},
 					label: "Título 3"
 				},
 			]
-		}
+		},
+		{
+			type: "button",
+			tooltip: "Lista com marcadores",
+			name: "list:bullets",
+			icon: "format_list_bulleted"
+		},
+		{
+			type: "button",
+			tooltip: "Lista ordenada",
+			name: "list:ordered",
+			icon: "format_list_numbered"
+		},
+		{
+			type: "button",
+			tooltip: "Adicionar imagem",
+			name: "image",
+			icon: "image"
+		},
 	];
 }

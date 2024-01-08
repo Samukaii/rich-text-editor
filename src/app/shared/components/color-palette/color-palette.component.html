@@ -1,24 +1,38 @@
 <div class="palette">
-	@for (color of colors;track color) {
+	@for (color of data.options.colors; track color) {
 		<div
 			[matTooltip]="color.tooltip"
-			[class.palette__color--active]="color.name === selected"
-			(click)="colorClick.emit(color.name)"
+			class="color"
 			(mousedown)="$event.preventDefault();"
+			(click)="applyColor(color.color)"
 			matRipple
 			[matRippleColor]="'#fff8'"
-			[matRippleRadius]="50"
-			[class]="getColorClass(color.name)">
+			[style.background-color]="color.color"
+			[matRippleRadius]="50">
 
-			@if (color.name === selected) {
+			@if (isSelected(color.color)()) {
 				<mat-icon>
 					check
-				</mat-icon>
-			} @else if (color.name.endsWith(":normal")) {
-				<mat-icon>
-					close
 				</mat-icon>
 			}
 		</div>
 	}
+	<div
+		matTooltip="Sem cor"
+		class="color remove"
+		(mousedown)="$event.preventDefault();"
+		(click)="removeColor()"
+		matRipple
+		[matRippleColor]="'#fff8'"
+		[matRippleRadius]="50">
+		@if (allDeselected()) {
+			<mat-icon>
+				check
+			</mat-icon>
+		} @else {
+			<mat-icon>
+				close
+			</mat-icon>
+		}
+	</div>
 </div>

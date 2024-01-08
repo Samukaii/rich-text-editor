@@ -14,31 +14,22 @@
 					</button>
 				</div>
 			}
-			@case ("palette") {
-				<app-text-editor-color-action
-					class="toolbar__action"
-					[colors]="format.options"
-					[matTooltip]="format.tooltip"
-					[icon]="format.icon"
-					[selected]="formatGroupActive | call: actives() : format"
-					(formatClick)="formatClick.emit($event)"
-				/>
+			@case ("overlay") {
+				<button
+					mat-icon-button
+					appTextEditorOverlayAction
+					[class.toolbar__action--active]="isFormatActive | call: actives() : format.name"
+					[component]="format.overlay.component"
+					[options]="format.overlay.options || {}"
+					(mousedown)="$event.preventDefault()"
+				>
+					<mat-icon>{{ format.icon }}</mat-icon>
+				</button>
 			}
 			@case ("select") {
-				<div class="toolbar__action--select">
-					<mat-form-field (mousedown)="$event.preventDefault(); $event.stopPropagation()" appearance="fill">
-						<mat-label>{{ format.label }}</mat-label>
-						<mat-select [value]="formatGroupActive | call: actives() : format">
-							@for (option of format.options;track option.name) {
-								<mat-option
-									(click)="formatClick.emit(option.name)"
-									[value]="option.name">
-									{{ option.label }}
-								</mat-option>
-							}
-						</mat-select>
-					</mat-form-field>
-				</div>
+				<app-app-text-editor-select-action
+					[format]="format"
+				/>
 			}
 		}
 
