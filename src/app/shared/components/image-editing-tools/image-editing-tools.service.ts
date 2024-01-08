@@ -80,9 +80,8 @@ export class ImageEditingToolsService implements OnDestroy {
 		if (!currentAlignmentElement) return;
 
 		const options = this.toolbarOptions();
-		console.log(options);
 
-		this.editor.changeElementFormat(currentAlignmentElement, 'align', {
+		this.editor.changeElementOptions(currentAlignmentElement, {
 			alignment: options.align
 		});
 

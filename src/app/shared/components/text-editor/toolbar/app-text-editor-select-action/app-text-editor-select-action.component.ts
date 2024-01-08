@@ -1,5 +1,5 @@
 import { Component, computed, inject, Input } from '@angular/core';
-import { AllFormatOptions } from "../../models/format-option";
+import { AllFormatOptions, FormatOption } from "../../models/format-option";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
 import { CallPipe } from "../../../../pipes/call.pipe";

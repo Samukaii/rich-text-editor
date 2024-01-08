@@ -18,19 +18,19 @@ export const allTextFormats = [
 		modifier: (element) => {
 			const li = document.createElement('li');
 
-			li.appendChild(document.createTextNode(' '));
+			li.appendChild(document.createTextNode('asdasdasd'));
 
 			element.appendChild(li);
 		}
 	},
 	{
-		name: "list:bullets",
+		name: "list:ordered",
 		nodeName: "ol",
 		insertionStrategy: 'insert-in-new-line',
 		modifier: (element) => {
 			const li = document.createElement('li');
 
-			li.appendChild(document.createTextNode(' '));
+			li.appendChild(document.createTextNode('asdasdas'));
 
 			element.appendChild(li);
 		}

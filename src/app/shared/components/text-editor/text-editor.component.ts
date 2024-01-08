@@ -51,17 +51,7 @@ export class TextEditorComponent implements AfterViewInit {
 			return;
 		}
 
-		if(actionName.includes(":")) {
-			const [format, color] = actionName.split(":");
-
-			if(color === "normal")
-				this.formatter.applyFormat(format, {remove: true});
-			if(format === "align")
-				this.formatter.applyFormat(format, {alignment: color});
-
-			else this.formatter.applyFormat(format, {color});
-		}
-		else this.formatter.applyFormat(actionName);
+		this.formatter.applyFormat(actionName);
 
 		this.formatter.normalizeElement(this.editor)
 

@@ -177,24 +177,20 @@ export class FormatHelperService {
 		return whiteSpace;
 	}
 
-	changeElementFormat(element: Element, newFormat: FormatName, options?: Generic) {
-		const format = this.getFormat(newFormat);
-
+	changeElementOptions(element: HTMLElement, options?: Generic) {
 		if(!this.nodeIsSomeValidFormat(element))
 			throw new Error("This element is not a valid format");
 
-		if (!format)
-			throw new Error(`The name "${newFormat}" is not a valid format`)
+		const formatName = this.getNodeFormat(element)!;
+		const format = this.getFormat(formatName)!;
 
-		const newElement = this.createElement(newFormat, options);
-
-		newElement.append(...Array.from(element.childNodes));
-
-		element.replaceWith(newElement);
-
-		// if ('classes' in format) element.className = format.classes;
-
-		return newElement;
+		if('modifier' in format)
+			format.modifier(element, {
+				formatOptions: options || {},
+				editor: {
+					createFormat: this.createElement.bind(this)
+				}
+			});
 	}
 
 	hasSameFormat(first: Element, second: Element) {
