@@ -3,7 +3,7 @@
 	appTextEditorOverlayAction
 	[class.toolbar__action--active]="isFormatActive()"
 	[component]="format.overlay.component"
-	[options]="format.overlay.options || {}"
+	[options]="getOptions | call: format"
 	(mousedown)="$event.preventDefault()"
 >
 	<mat-icon>{{ format.icon }}</mat-icon>

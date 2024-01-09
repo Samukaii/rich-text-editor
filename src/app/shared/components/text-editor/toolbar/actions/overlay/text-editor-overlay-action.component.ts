@@ -7,6 +7,8 @@ import {
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { TextFormatterService } from "../../../services/text-formatter.service";
+import { TextEditorComponent } from "../../../text-editor.component";
+import { CallPipe } from "../../../../../pipes/call.pipe";
 
 @Component({
 	selector: 'app-text-editor-overlay-action',
@@ -14,7 +16,8 @@ import { TextFormatterService } from "../../../services/text-formatter.service";
 	imports: [
 		TextEditorOverlayActionDirective,
 		MatButtonModule,
-		MatIconModule
+		MatIconModule,
+		CallPipe
 	],
 	templateUrl: './text-editor-overlay-action.component.html',
 	styleUrl: './text-editor-overlay-action.component.scss'
@@ -24,6 +27,7 @@ export class TextEditorOverlayActionComponent {
 
 	activeFormatsService = inject(ActiveFormatsService);
 	formatter = inject(TextFormatterService);
+	editor = inject(TextEditorComponent);
 
 	actives = computed(() => this.activeFormatsService.activeFormats());
 
@@ -31,5 +35,12 @@ export class TextEditorOverlayActionComponent {
 		const all = this.actives();
 
 		return !!all.find(active => active.name === this.format.name)
-	})
+	});
+
+	getOptions(format: FormatOption<"overlay">) {
+		return {
+			editor: this.editor,
+			...(format.overlay.options || {}),
+		}
+	}
 }
