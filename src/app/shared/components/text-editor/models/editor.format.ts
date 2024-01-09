@@ -1,31 +1,23 @@
-import { FormatName } from "./format.name";
 import { Generic } from "./generic";
-import { ActiveFormat } from "../services/active-formats.service";
+import { EditorFormatName } from "./editor-format-name";
+import { EditorFormatOptions } from "./editor-format-options";
 
-export interface EditorModifierOptions {
-	formatOptions: Generic;
+export interface EditorModifierOptions<Name extends EditorFormatName> {
+	formatOptions: EditorFormatOptions<Name>;
 	editor: {
-		createFormat: (name: string, options: Generic) => HTMLElement;
+		createFormat: <Name extends EditorFormatName>(
+			name: Name,
+			options: EditorFormatOptions<Name>
+		) => HTMLElement;
 	}
 }
 
 
-export type EditorFormat = {
-	name: string;
+export type EditorFormat<Name extends EditorFormatName = EditorFormatName> = {
+	name: Name;
 	autoRemove?: boolean;
 	insertionStrategy: 'surround-selection' | 'insert-in-new-line' | 'insert-in-same-line',
 	editable?: boolean;
 	nodeName: keyof HTMLElementTagNameMap;
-	modifier?: (element: HTMLElement, options: EditorModifierOptions) => void;
-};
-
-export type FormatBlockChild = FormatName | {
-	format: FormatName;
-	children?: FormatBlockChild[]
-};
-
-export type FormatBlock = {
-	name: string;
-	nodeName: string;
-	children: FormatBlockChild[];
+	modifier?: (element: HTMLElement, options: EditorModifierOptions<Name>) => void;
 };

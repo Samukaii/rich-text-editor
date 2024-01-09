@@ -3,7 +3,7 @@ import { ElementRectHelper } from "../text-editor/helpers/element-rect-helper";
 import { ImageEditingAlignment } from "./models/image-editing.alignment";
 import { ResizerHandlerLocation } from "../../services/element-resizer/models/resizer-handler-location";
 import { DOCUMENT } from "@angular/common";
-import { FormatHelperService } from "../text-editor/services/format-helper.service";
+import { FormatHelperService } from "../text-editor/services/format-helper/format-helper.service";
 import { OverlayCreatorOptions } from "../../services/overlay-creator/models/overlay-creator-options";
 import { EditingToolbarComponent } from "./toolbar/editing-toolbar.component";
 import { OverlayCreatorService } from "../../services/overlay-creator/overlay-creator.service";

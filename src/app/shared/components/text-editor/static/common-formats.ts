@@ -1,28 +1,33 @@
-import { EditorFormat } from "../models/editor.format";
+import {  EditorFormat } from "../models/editor.format";
+
+const bold: EditorFormat<"bold"> = {
+	name: "bold",
+	autoRemove: true,
+	insertionStrategy: 'surround-selection',
+	nodeName: 'strong',
+}
+
+const italic: EditorFormat<"italic"> = {
+	name: "italic",
+	autoRemove: true,
+	insertionStrategy: 'surround-selection',
+	nodeName: 'strong',
+}
+
+const strikethrough: EditorFormat<"strikethrough"> = {
+	name: "strikethrough",
+	autoRemove: true,
+	insertionStrategy: 'surround-selection',
+	nodeName: 'strong',
+}
+
+const underlined: EditorFormat<"underlined"> = {
+	name: "underlined",
+	autoRemove: true,
+	insertionStrategy: 'surround-selection',
+	nodeName: 'strong',
+}
 
 export const commonFormats = [
-	{
-		name: "bold",
-		autoRemove: true,
-		insertionStrategy: 'surround-selection',
-		nodeName: 'strong',
-	},
-	{
-		name: "italic",
-		autoRemove: true,
-		insertionStrategy: 'surround-selection',
-		nodeName: 'em',
-	},
-	{
-		name: "strikethrough",
-		autoRemove: true,
-		insertionStrategy: 'surround-selection',
-		nodeName: 's',
-	},
-	{
-		name: "underlined",
-		autoRemove: true,
-		insertionStrategy: 'surround-selection',
-		nodeName: 'u',
-	},
-] as const satisfies Readonly<EditorFormat[]>;
+	bold, italic, strikethrough, underlined
+];

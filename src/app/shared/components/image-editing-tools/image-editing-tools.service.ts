@@ -3,12 +3,11 @@ import { DOCUMENT } from "@angular/common";
 import { EditingToolbarComponent } from "./toolbar/editing-toolbar.component";
 import { OverlayCreatorOptions } from "../../services/overlay-creator/models/overlay-creator-options";
 import { ElementResizerService } from "../../services/element-resizer/element-resizer.service";
-import { FormatHelperService } from "../text-editor/services/format-helper.service";
+import { FormatHelperService } from "../text-editor/services/format-helper/format-helper.service";
 import { EditorEventsService } from "../text-editor/services/editor-events.service";
 import { EditingToolbarButton } from "./models/editing-toolbar-button";
 import { ImageEditingToolbarOptions } from "./models/image-editing-toolbar.options";
 import { ImageEditingToolsHelperService } from "./image-editing-tools-helper.service";
-import { ImageEditingAlignment } from "./models/image-editing.alignment";
 import { RectLimitation } from "../../models/rect-limitation";
 
 

@@ -1,6 +1,6 @@
 import { EditorFormat } from "../models/editor.format";
 
-export const backgroundColorsFormats = [
+export const backgroundColorsFormats: EditorFormat<"background-color">[] = [
 	{
 		name: "background-color",
 		insertionStrategy: 'surround-selection',
@@ -13,4 +13,4 @@ export const backgroundColorsFormats = [
 			return element;
 		}
 	},
-] as const satisfies Readonly<EditorFormat[]>;
+];

@@ -1,8 +1,8 @@
-import { GroupedFormatName } from "./grouped-format-name";
 import { FormatName } from "./format.name";
 import { Type } from "@angular/core";
 import { Generic } from "./generic";
 import { ColorPaletteComponent } from "../../color-palette/color-palette.component";
+import { EditorFormatName } from "./editor-format-name";
 
 
 const defaultPaletteColors = [
@@ -49,34 +49,35 @@ export const createPaletteOverlay = (format: string, colors: {color: string; too
 	}
 };
 
-export type AllFormatOptions = [
-	{
+
+export type AllFormatOptions = {
+	button: {
 		type: "button",
 		tooltip: string;
-		name: FormatName,
+		name: EditorFormatName,
 		options?: Generic;
 		icon: string
 	},
-	{
+	overlay: {
 		type: 'overlay',
 		tooltip: string;
 		icon: string,
-		name: FormatName,
+		name: EditorFormatName,
 		overlay: {
 			component: Type<any>;
 			options?: Generic;
 		}
 	},
-	{
+	select: {
 		type: "select",
 		label: string;
-		name: FormatName,
+		name: EditorFormatName,
 		items: {
 			label: string;
 			removeFormat?: true;
 			options?: Generic;
 		}[]
-	},
-];
+	}
+};
 
-export type FormatOption<Index extends number = number> = AllFormatOptions[Index];
+export type FormatOption<Type extends keyof AllFormatOptions = keyof AllFormatOptions> = AllFormatOptions[Type];

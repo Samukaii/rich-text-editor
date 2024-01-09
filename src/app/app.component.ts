@@ -60,25 +60,29 @@ export class AppComponent {
 			type: "button",
 			tooltip: "Alinhar à esquerda",
 			icon: "format_align_left",
-			name: "align:left",
+			name: "align",
+			options: {alignment: "left"}
 		},
 		{
 			type: "button",
 			tooltip: "Alinhar ao centro",
 			icon: "format_align_center",
-			name: "align:center",
+			name: "align",
+			options: {alignment: "center"}
 		},
 		{
 			type: "button",
 			tooltip: "Alinhar à direita",
 			icon: "format_align_right",
-			name: "align:right",
+			name: "align",
+			options: {alignment: "right"}
 		},
 		{
 			type: "button",
 			tooltip: "Justificar",
 			icon: "format_align_justify",
-			name: "align:justify",
+			name: "align",
+			options: {alignment: "justify"}
 		},
 		{
 			type: "select",

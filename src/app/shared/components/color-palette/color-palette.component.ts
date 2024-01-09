@@ -6,6 +6,7 @@ import { OVERLAY_DATA_TOKEN } from "../../services/overlay-creator/overlay-data.
 import { JsonPipe } from "@angular/common";
 import { TextFormatterService } from "../text-editor/services/text-formatter.service";
 import { ActiveFormatsService } from "../text-editor/services/active-formats.service";
+import { EditorFormatName } from "../text-editor/models/editor-format-name";
 
 @Component({
   selector: 'app-color-palette',
@@ -22,7 +23,7 @@ import { ActiveFormatsService } from "../text-editor/services/active-formats.ser
 export class ColorPaletteComponent {
 	data = inject<{
 		options: {
-			format: string;
+			format: EditorFormatName;
 			colors: {
 				tooltip: string;
 				color: string;
@@ -39,7 +40,7 @@ export class ColorPaletteComponent {
 	}
 
 	removeColor() {
-		this.formatter.applyFormat(this.data.options.format, {remove: true});
+		this.formatter.removeFormat(this.data.options.format);
 	}
 
 	isSelected = (color: string) => computed(() => {

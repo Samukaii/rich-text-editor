@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
-import { FormatHelperService } from "./format-helper.service";
+import { FormatHelperService } from "./format-helper/format-helper.service";
 import { FormatName } from "../models/format.name";
 import { Generic } from "../models/generic";
 import { EditorEventsService } from "./editor-events.service";
@@ -30,7 +30,6 @@ export class TextFormatterService {
 	document = inject(DOCUMENT);
 	helper = inject(FormatHelperService);
 	editor = inject(EditorEventsService);
-	activeFormats = inject(ActiveFormatsService);
 	emptyNodeException = [
 		"br",
 		"#text-editor",
@@ -178,10 +177,7 @@ export class TextFormatterService {
 		const newTagParent = this.helper.createElement(formatName, options);
 		const content = range.extractContents();
 
-		const group = this.helper.getFormatGroup(formatName);
-
-		if(group) this.removeFormatGroupFromChildren(content, group)
-		else this.removeFormatFromElement(content, formatName);
+		this.removeFormatFromElement(content, formatName);
 
 		newTagParent.append(content)
 
@@ -218,31 +214,6 @@ export class TextFormatterService {
 		const {start, currentRange, end} = this.splitRangeInElement(tagParent, range);
 
 		const newChildren = [start, ...Array.from(currentRange.childNodes), end];
-
-		const onlyNotNull = newChildren.filter(
-			(child): child is DocumentFragment => !!child
-		);
-
-		tagParent.replaceWith(...onlyNotNull);
-	}
-
-	private removeGroupFormatFromRange(range: Range, groupName: string) {
-		const tagParent = this.findAnyParentFormatOfGroup(range, groupName);
-
-		if (!tagParent) {
-			const content = range.extractContents();
-
-			this.removeFormatGroupFromChildren(content, groupName)
-
-			range.insertNode(content);
-			return
-		}
-
-		const {start, currentRange, end} = this.splitRangeInElement(tagParent, range);
-
-		this.removeFormatGroupFromChildren(currentRange, groupName);
-
-		const newChildren = [start, ...Array.from(currentRange!.childNodes), end];
 
 		const onlyNotNull = newChildren.filter(
 			(child): child is DocumentFragment => !!child
@@ -298,27 +269,6 @@ export class TextFormatterService {
 		return boldElement;
 	}
 
-	private findAnyParentFormatOfGroup(range: Range, groupName: string) {
-		const ancestor = range.commonAncestorContainer;
-
-		if (this.helper.nodeBelongsToFormatGroup(ancestor, groupName)) return ancestor as HTMLElement;
-
-		if (ancestor.parentElement && this.helper.nodeBelongsToFormatGroup(ancestor.parentElement, groupName))
-			return ancestor.parentElement
-
-		let parent = range.commonAncestorContainer.parentElement;
-		let elementWithFormat: HTMLElement | null = null;
-
-		while (parent?.parentElement) {
-			parent = parent?.parentElement!;
-
-			if (this.helper.nodeBelongsToFormatGroup(parent, groupName))
-				elementWithFormat = parent;
-		}
-
-		return elementWithFormat;
-	}
-
 	private removeFormatFromElement(element: DocumentFragment | Element, formatName: FormatName) {
 		const children: Element[] = Array.from(element.children);
 
@@ -330,22 +280,6 @@ export class TextFormatterService {
 			}
 
 			return this.removeFormatFromElement(child, formatName)
-		});
-	}
-
-	private removeFormatGroupFromChildren(element: Node, groupName: string) {
-		if(!(element instanceof Element)) return;
-
-		const children: Element[] = Array.from(element.children);
-
-		if (!children.length) return;
-
-		children.forEach(child => {
-			if (this.helper.nodeBelongsToFormatGroup(child, groupName)) {
-				child.replaceWith(...Array.from(child.childNodes))
-			}
-
-			return this.removeFormatGroupFromChildren(child, groupName)
 		});
 	}
 }

@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, NgZone, signal } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
-import { FormatHelperService } from "./format-helper.service";
+import { FormatHelperService } from "./format-helper/format-helper.service";
 import { FormatName } from "../models/format.name";
 import { Generic } from "../models/generic";
 

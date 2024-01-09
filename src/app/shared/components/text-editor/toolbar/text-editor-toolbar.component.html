@@ -2,36 +2,14 @@
 	@for (format of formats;track format) {
 		@switch (format.type) {
 			@case ("button") {
-				<div class="toolbar__action">
-					<button
-						[matTooltip]="format.tooltip"
-						(mousedown)="$event.preventDefault()"
-						[class.toolbar__action--active]="isFormatActive | call: actives() : format.name"
-						mat-icon-button
-						(click)="formatClick.emit(format.name)"
-					>
-						<mat-icon>{{ format.icon }}</mat-icon>
-					</button>
-				</div>
+				<app-text-editor-button-action [format]="format"/>
 			}
 			@case ("overlay") {
-				<button
-					mat-icon-button
-					appTextEditorOverlayAction
-					[class.toolbar__action--active]="isFormatActive | call: actives() : format.name"
-					[component]="format.overlay.component"
-					[options]="format.overlay.options || {}"
-					(mousedown)="$event.preventDefault()"
-				>
-					<mat-icon>{{ format.icon }}</mat-icon>
-				</button>
+				<app-text-editor-overlay-action [format]="format"/>
 			}
 			@case ("select") {
-				<app-app-text-editor-select-action
-					[format]="format"
-				/>
+				<app-text-editor-select-action [format]="format"/>
 			}
 		}
-
 	}
 </div>

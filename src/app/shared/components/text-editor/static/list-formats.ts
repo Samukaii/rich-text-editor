@@ -4,17 +4,6 @@ import { headingFormats } from "./heading-formats";
 import { colorFormats } from "./color-formats";
 import { backgroundColorsFormats } from "./background-colors-formats";
 import { EditorFormat } from "../models/editor.format";
-import { listFormats } from "./list-formats";
-
-export const allTextFormats: EditorFormat[] = [
-	...commonFormats,
-	...alignmentFormats,
-	...headingFormats,
-	...colorFormats,
-	...backgroundColorsFormats,
-	...listFormats,
-
-];
 
 declare global {
 	export interface AllEditorFormats {
@@ -52,3 +41,31 @@ declare global {
 	}
 }
 
+const bullets: EditorFormat<"list:bullets"> = {
+	name: "list:bullets",
+	nodeName: "ul",
+	insertionStrategy: 'insert-in-new-line',
+	modifier: (element) => {
+		const li = document.createElement('li');
+
+		li.appendChild(document.createTextNode('asdasdasd'));
+
+		element.appendChild(li);
+	}
+};
+
+const ordered: EditorFormat<"list:ordered"> = {
+	name: "list:ordered",
+	nodeName: "ol",
+	insertionStrategy: 'insert-in-new-line',
+	modifier: (element) => {
+		const li = document.createElement('li');
+
+		li.appendChild(document.createTextNode('asdasdas'));
+
+		element.appendChild(li);
+	}
+}
+
+
+export const listFormats = [bullets, ordered];

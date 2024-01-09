@@ -1,6 +1,6 @@
 import { EditorFormat } from "../models/editor.format";
 
-export const headingFormats = [
+export const headingFormats: EditorFormat<"heading">[] = [
 	{
 		name: "heading",
 		insertionStrategy: 'surround-selection',
@@ -11,4 +11,4 @@ export const headingFormats = [
 			element.className = `heading heading--${formatOptions["level"]}`
 		}
 	},
-] as const satisfies Readonly<EditorFormat[]>;
+];

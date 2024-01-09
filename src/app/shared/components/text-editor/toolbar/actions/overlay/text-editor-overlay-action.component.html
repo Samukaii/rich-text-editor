@@ -1,0 +1,10 @@
+<button
+	mat-icon-button
+	appTextEditorOverlayAction
+	[class.toolbar__action--active]="isFormatActive()"
+	[component]="format.overlay.component"
+	[options]="format.overlay.options || {}"
+	(mousedown)="$event.preventDefault()"
+>
+	<mat-icon>{{ format.icon }}</mat-icon>
+</button>

@@ -1,21 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { allTextFormats } from "../static/all-text-formats";
+import { allTextFormats } from "../../static/all-text-formats";
 
-import { FormatBlockName, FormatName } from "../models/format.name";
+import { FormatName } from "../../models/format.name";
 import { DOCUMENT } from "@angular/common";
-import { waitImageLoad } from "../../../functions/wait-image-load";
-import { allTextBlocks } from "../static/all-text-blocks";
-import { FormatBlockChild } from "../models/editor.format";
-import { Generic } from "../models/generic";
-import { keyframes } from "@angular/animations";
-
-
-type ValidValue = string | number | null | undefined | boolean;
-interface ValidOptions {
-	[key: string]: ValidValue | ValidValue[] | ValidOptions;
-}
-
-
+import { Generic } from "../../models/generic";
+import { FormatEditorValidOptions } from "./models/format-editor-valid.options";
+import { EditorFormatName } from "../../models/editor-format-name";
+import { EditorFormatOptions } from "../../models/editor-format-options";
+import { EditorFormat } from "../../models/editor.format";
 
 
 @Injectable({
@@ -26,11 +18,13 @@ export class FormatHelperService {
 	private editorPrefix = "editor-format-";
 	private editorOptionsAttribute = "data-editor-options";
 
-	getFormat(formatName: FormatName) {
-		return allTextFormats.find(format => format.name === formatName);
+	getFormat<Name extends EditorFormatName>(formatName: Name) {
+		return allTextFormats.find(
+			format => format.name === formatName
+		) as EditorFormat<Name> | undefined;
 	}
 
-	createElement(name: FormatName, options?: Generic) {
+	createElement<Name extends EditorFormatName>(name: Name, options?: EditorFormatOptions<Name>) {
 		const format = this.getFormat(name);
 
 		if (!format)
@@ -39,7 +33,7 @@ export class FormatHelperService {
 		const element = document.createElement(format.nodeName);
 
 		if('modifier' in format)
-			format.modifier(element, {
+			format.modifier?.(element, {
 				formatOptions: options || {},
 				editor: {
 					createFormat: this.createElement.bind(this)
@@ -66,7 +60,7 @@ export class FormatHelperService {
 		return JSON.stringify(options);
 	}
 
-	private isValidOptions(options: Generic): options is ValidOptions {
+	private isValidOptions(options: Generic): options is FormatEditorValidOptions {
 		return Object.keys(options).every(key => {
 			const value = options[key];
 
@@ -83,41 +77,6 @@ export class FormatHelperService {
 
 			return !!Array.isArray(value);
 		});
-	}
-
-	createBlock(blockName: FormatBlockName) {
-		const block = this.getBlock(blockName);
-		if(!block)
-			throw new Error(`Block "${blockName}" is not a valid format block`);
-
-		const elementBlock = this.document.createElement(block.nodeName);
-		elementBlock.id = `${this.editorPrefix}block-${blockName}`
-		elementBlock.setAttribute('contentEditable', 'false');
-
-		block.children.forEach(child => {
-			elementBlock.appendChild(this.createBlockChild(child));
-		})
-
-		return elementBlock
-	}
-
-	private createBlockChild(child: FormatBlockChild) {
-		if(typeof child === "string")
-			return this.createElement(child);
-
-		let childElement = this.createElement(child.format);
-
-		if(!child.children?.length) return childElement;
-
-		child.children.forEach((childChild: any) =>
-			childElement.appendChild(this.createBlockChild(childChild))
-		);
-
-		return childElement;
-	}
-
-	getBlock(blockName: FormatBlockName) {
-		return allTextBlocks.find(block => block.name === blockName);
 	}
 
 	findFormatOnChildren(element: Element, format: FormatName) {
@@ -157,26 +116,6 @@ export class FormatHelperService {
 		return parent;
 	}
 
-	findBlockOnParent(element: HTMLElement, format: FormatBlockName) {
-		const id = `${this.editorPrefix}block-${format}`;
-
-		let parent = element.parentElement;
-
-		while (parent && parent.id !== id) {
-			parent = parent.parentElement;
-		}
-
-		return parent;
-	}
-
-	createWhiteSpace() {
-		const whiteSpace = this.document.createElement('div');
-
-		whiteSpace.appendChild(this.document.createElement('br'));
-
-		return whiteSpace;
-	}
-
 	changeElementOptions(element: HTMLElement, options?: Generic) {
 		if(!this.nodeIsSomeValidFormat(element))
 			throw new Error("This element is not a valid format");
@@ -185,12 +124,19 @@ export class FormatHelperService {
 		const format = this.getFormat(formatName)!;
 
 		if('modifier' in format)
-			format.modifier(element, {
+			format.modifier?.(element, {
 				formatOptions: options || {},
 				editor: {
 					createFormat: this.createElement.bind(this)
 				}
 			});
+	}
+
+	compareOptions(first: Generic, second: Generic) {
+		const firstID = this.identifyByOptions(first);
+		const secondId = this.identifyByOptions(second);
+
+		return firstID === secondId;
 	}
 
 	hasSameFormat(first: Element, second: Element) {
@@ -200,16 +146,6 @@ export class FormatHelperService {
 		const secondOptions = second.getAttribute(this.editorOptionsAttribute);
 
 		return first.id === second.id && firstOptions === secondOptions;
-	}
-
-	createListItem(content: Node | string) {
-		const li = this.document.createElement("li");
-
-		if(typeof content === "string")
-			li.appendChild(this.document.createTextNode(content));
-		else li.appendChild(content);
-
-		return li;
 	}
 
 	nodeIsSomeValidFormat(node: Node): node is Element {
@@ -238,28 +174,5 @@ export class FormatHelperService {
 		if(!options) return;
 
 		return JSON.parse(options);
-	}
-
-	nodeBelongsToFormatGroup(node: Node, groupName: string) {
-		if (!this.nodeIsSomeValidFormat(node)) return false;
-
-		const id = node.id.replace(this.editorPrefix, "");
-		const [nodeGroupName] = id.split(":");
-
-		return nodeGroupName === groupName;
-	}
-
-	getFormatGroup(formatName: FormatName)  {
-		const parts = formatName.split(":");
-		if (!parts[1]) return;
-
-		return parts[0];
-	}
-
-	isListLike(formatName: FormatName)  {
-		const parts = formatName.split(":");
-		if (!parts[1]) return;
-
-		return parts[0] === "list";
 	}
 }

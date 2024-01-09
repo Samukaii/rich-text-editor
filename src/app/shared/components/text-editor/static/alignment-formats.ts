@@ -1,6 +1,6 @@
 import { EditorFormat } from "../models/editor.format";
 
-export const alignmentFormats = [
+export const alignmentFormats: EditorFormat<"align">[] = [
 	{
 		name: "align",
 		insertionStrategy: 'surround-selection',
@@ -13,4 +13,4 @@ export const alignmentFormats = [
 			return element;
 		}
 	},
-] satisfies Readonly<EditorFormat[]>;
+];

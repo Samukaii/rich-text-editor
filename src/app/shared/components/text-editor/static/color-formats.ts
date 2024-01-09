@@ -1,6 +1,6 @@
 import { EditorFormat } from "../models/editor.format";
 
-export const colorFormats = [
+export const colorFormats: EditorFormat<"color">[] = [
 	{
 		name: "color",
 		insertionStrategy: 'surround-selection',
@@ -8,9 +8,9 @@ export const colorFormats = [
 		modifier: (element, options) => {
 			const {formatOptions} = options;
 
-			element.style.color = formatOptions["color"];
+			element.style.color = formatOptions.color;
 
 			return element;
 		}
 	},
-] as const satisfies Readonly<EditorFormat[]>;
+];

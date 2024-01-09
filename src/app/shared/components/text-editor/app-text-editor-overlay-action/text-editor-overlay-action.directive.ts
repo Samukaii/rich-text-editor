@@ -9,7 +9,7 @@ import { OverlayRef } from "@angular/cdk/overlay";
   selector: '[appTextEditorOverlayAction]',
   standalone: true,
 })
-export class AppTextEditorOverlayActionDirective implements OnDestroy {
+export class TextEditorOverlayActionDirective implements OnDestroy {
 	@Input({required: true}) component!: Type<any>;
 	@Input() options: Generic = {};
 

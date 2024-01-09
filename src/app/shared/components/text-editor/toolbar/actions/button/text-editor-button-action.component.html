@@ -1,0 +1,11 @@
+<div class="toolbar__action">
+	<button
+		[matTooltip]="format.tooltip"
+		(mousedown)="$event.preventDefault()"
+		[class.toolbar__action--active]="isFormatActive()"
+		mat-icon-button
+		(click)="applyFormat()"
+	>
+		<mat-icon>{{ format.icon }}</mat-icon>
+	</button>
+</div>
