@@ -39,6 +39,7 @@ export class TextEditorComponent implements AfterViewInit {
 	private destroyRef = inject(DestroyRef);
 
 	@ViewChild('editor') editorRef!: ElementRef<HTMLElement>;
+	@Input() customToolbar: FormatOption[] = [];
 	@Input() formats: FormatOption[] = [];
 
 	get editor() {

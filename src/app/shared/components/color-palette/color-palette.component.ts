@@ -22,6 +22,9 @@ import { TextEditorComponent } from "../text-editor/text-editor.component";
   styleUrl: './color-palette.component.scss'
 })
 export class ColorPaletteComponent {
+	options!: {
+		someProp: string
+	};
 	data = inject<{
 		options: {
 			editor: TextEditorComponent;

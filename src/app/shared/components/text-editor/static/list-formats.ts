@@ -1,45 +1,5 @@
-import { commonFormats } from "./common-formats";
-import { alignmentFormats } from "./alignment-formats";
-import { headingFormats } from "./heading-formats";
-import { colorFormats } from "./color-formats";
-import { backgroundColorsFormats } from "./background-colors-formats";
 import { EditorFormat } from "../models/editor.format";
 
-declare global {
-	export interface AllEditorFormats {
-		bold: {},
-		italic: {},
-		strikethrough: {},
-		underlined: {},
-		"list:bullets": {},
-		"list:ordered": {},
-		color: {
-			options: {
-				color: string;
-			}
-		},
-		"background-color": {
-			options: {
-				color: string;
-			}
-		},
-		heading: {
-			options: {
-				level: 1 | 2 | 3
-			}
-		}
-		image: {
-			options: {
-				src: string;
-			}
-		},
-		align: {
-			options: {
-				alignment: "left" | "right" | "center" | "justify"
-			}
-		}
-	}
-}
 
 const bullets: EditorFormat<"list:bullets"> = {
 	name: "list:bullets",
@@ -48,7 +8,7 @@ const bullets: EditorFormat<"list:bullets"> = {
 	modifier: (element) => {
 		const li = document.createElement('li');
 
-		li.appendChild(document.createTextNode('asdasdasd'));
+		li.appendChild(document.createTextNode(' '));
 
 		element.appendChild(li);
 	}
@@ -61,7 +21,7 @@ const ordered: EditorFormat<"list:ordered"> = {
 	modifier: (element) => {
 		const li = document.createElement('li');
 
-		li.appendChild(document.createTextNode('asdasdas'));
+		li.appendChild(document.createTextNode(' '));
 
 		element.appendChild(li);
 	}

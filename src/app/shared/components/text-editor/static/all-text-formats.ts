@@ -36,7 +36,7 @@ declare global {
 		},
 		heading: {
 			options: {
-				level: 1 | 2 | 3
+				level: 1 | 2 | 3;
 			}
 		}
 		image: {
@@ -46,7 +46,7 @@ declare global {
 		},
 		align: {
 			options: {
-				alignment: "left" | "right" | "center" | "justify"
+				alignment: "left" | "right" | "center" | "justify";
 			}
 		}
 	}

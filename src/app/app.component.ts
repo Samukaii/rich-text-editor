@@ -5,7 +5,83 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
 import { TextEditorComponent } from "./shared/components/text-editor/text-editor.component";
-import { createPaletteOverlay, FormatOption } from "./shared/components/text-editor/models/format-option";
+import {
+	createPaletteOverlay,
+	defaultPaletteColors,
+	FormatOption
+} from "./shared/components/text-editor/models/format-option";
+import {
+	TextEditorButtonActionComponent
+} from "./shared/components/text-editor/toolbar/actions/button/text-editor-button-action.component";
+import {
+	TextEditorOverlayActionComponent
+} from "./shared/components/text-editor/toolbar/actions/overlay/text-editor-overlay-action.component";
+import {
+	TextEditorSelectActionComponent
+} from "./shared/components/text-editor/toolbar/actions/select/text-editor-select-action.component";
+
+const createToolbarButton = (name: string, ) => {
+
+}
+
+const EDITOR_CONFIG = {
+	toolbarButtons: [
+		{
+			name: "bold",
+			component: TextEditorButtonActionComponent,
+			options: {
+				format: "bold",
+			}
+		},
+		{
+			name: "italic",
+			component: TextEditorButtonActionComponent,
+			options: {
+				format: "italic"
+			}
+		},
+		{
+			name: "text-color",
+			component: TextEditorOverlayActionComponent,
+			options: {
+				colors: defaultPaletteColors
+			}
+		},
+		{
+			name: "background-color",
+			component: TextEditorOverlayActionComponent,
+			options: {
+				colors: defaultPaletteColors
+			}
+		},
+		{
+			name: "heading",
+			component: TextEditorSelectActionComponent,
+			options: {
+				items: [
+					{
+						format: "heading",
+						options: {
+							level: 1
+						}
+					},
+					{
+						format: "heading",
+						options: {
+							level: 1
+						}
+					},
+					{
+						format: "heading",
+						options: {
+							level: 1
+						}
+					},
+				]
+			}
+		}
+	]
+}
 
 
 @Component({
@@ -61,7 +137,9 @@ export class AppComponent {
 			tooltip: "Alinhar à esquerda",
 			icon: "format_align_left",
 			name: "align",
-			options: {alignment: "left"}
+			options: {
+				alignment: "right"
+			}
 		},
 		{
 			type: "button",
@@ -119,6 +197,9 @@ export class AppComponent {
 			type: "button",
 			tooltip: "Adicionar imagem",
 			name: "image",
+			options: {
+				src: ""
+			},
 			icon: "image"
 		},
 	];

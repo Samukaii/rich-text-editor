@@ -1,27 +1,17 @@
-# RichText
+# Ideias
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+- Transformar o Text Editor em um componente com uma toolbar personalizável
+- Criar um service geral para realizar todas as ações no editor
+	- Aplicar um formato
+    - Adicionar novos formatos
+    - Definir regex para formatos
+- Coisas em comum para todas as ações da toolbar
+	- Todas à sua maneira aplicam uma formatação
+    - Todas possuem uma forma de identificar se elas estão ativas na seleção atual
+- Diferenças
+	- O botão aplica ou remove a edição na hora
+    - O overlay abre um overlay para adicionar posteriormente a formatação
+    - O select permite entre uma lista de opções decidir a formatação
+    - O select possui a opção de "Texto normal" ao invés de clicar na formatação atual para remover
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Como unir todas essas ideias?

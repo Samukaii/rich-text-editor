@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, OnInit, Output, Signal } from '@angular/core';
 import { MatRippleModule } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -18,6 +18,10 @@ import { TextEditorSelectActionComponent } from "./actions/select/text-editor-se
 import { TextEditorButtonActionComponent } from "./actions/button/text-editor-button-action.component";
 import { TextEditorOverlayActionComponent } from "./actions/overlay/text-editor-overlay-action.component";
 import { EditorFormatName } from "../models/editor-format-name";
+
+interface TextEditorToolbarInterface {
+	activeFormats: Signal<ActiveFormat[]>;
+}
 
 @Component({
 	selector: 'app-text-editor-toolbar',
