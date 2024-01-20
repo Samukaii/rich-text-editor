@@ -1,98 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
 import { TextEditorComponent } from "./shared/components/text-editor/text-editor.component";
-import {
-	createPaletteOverlay,
-	defaultPaletteColors,
-	FormatOption
-} from "./shared/components/text-editor/models/format-option";
-import {
-	TextEditorButtonActionComponent
-} from "./shared/components/text-editor/toolbar/actions/button/text-editor-button-action.component";
-import {
-	TextEditorOverlayActionComponent
-} from "./shared/components/text-editor/toolbar/actions/overlay/text-editor-overlay-action.component";
-import {
-	TextEditorSelectActionComponent
-} from "./shared/components/text-editor/toolbar/actions/select/text-editor-select-action.component";
-
-const createToolbarButton = (name: string, ) => {
-
-}
-
-const EDITOR_CONFIG = {
-	toolbarButtons: [
-		{
-			name: "bold",
-			component: TextEditorButtonActionComponent,
-			options: {
-				format: "bold",
-			}
-		},
-		{
-			name: "italic",
-			component: TextEditorButtonActionComponent,
-			options: {
-				format: "italic"
-			}
-		},
-		{
-			name: "text-color",
-			component: TextEditorOverlayActionComponent,
-			options: {
-				colors: defaultPaletteColors
-			}
-		},
-		{
-			name: "background-color",
-			component: TextEditorOverlayActionComponent,
-			options: {
-				colors: defaultPaletteColors
-			}
-		},
-		{
-			name: "heading",
-			component: TextEditorSelectActionComponent,
-			options: {
-				items: [
-					{
-						format: "heading",
-						options: {
-							level: 1
-						}
-					},
-					{
-						format: "heading",
-						options: {
-							level: 1
-						}
-					},
-					{
-						format: "heading",
-						options: {
-							level: 1
-						}
-					},
-				]
-			}
-		}
-	]
-}
+import { createPaletteOverlay, FormatOption } from "./shared/components/text-editor/models/format-option";
+import { TextEditorToolbarComponent } from "./shared/components/text-editor/toolbar/text-editor-toolbar.component";
 
 
 @Component({
 	selector: 'app-root',
 	standalone: true,
-	imports: [CommonModule, RouterOutlet, MatButtonModule, MatIconModule, MatRippleModule, TextEditorComponent],
+	imports: [CommonModule, RouterOutlet, MatButtonModule, MatIconModule, MatRippleModule, TextEditorComponent, TextEditorToolbarComponent],
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-
 	formats: FormatOption[] = [
 		{
 			type: "button",
@@ -120,16 +44,10 @@ export class AppComponent {
 		},
 		{
 			type: "overlay",
-			icon: "format_color_text",
-			tooltip: "Cor do texto",
-			name: "color",
 			overlay: createPaletteOverlay("color"),
 		},
 		{
 			type: "overlay",
-			icon: "format_color_fill",
-			tooltip: "Cor de fundo",
-			name: "background-color",
 			overlay: createPaletteOverlay("background-color"),
 		},
 		{

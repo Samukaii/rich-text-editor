@@ -130,16 +130,6 @@ const a: Abc[] = [
 ]
 
 
-const a: AllFormatTestOptions = {
-	button: {
-		name: "",
-		options: {
-
-		}
-	},
-
-}
-
 export type AllFormatOptions = {
 	button: {
 		type: "button",

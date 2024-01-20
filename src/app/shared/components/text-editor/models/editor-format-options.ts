@@ -12,4 +12,3 @@ export type EditorAction = {
 		: k
 }[EditorFormatName]
 
-const a: EditorAction = "heading:1"

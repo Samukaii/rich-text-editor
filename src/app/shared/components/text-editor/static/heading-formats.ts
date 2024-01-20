@@ -8,7 +8,7 @@ export const headingFormats: EditorFormat<"heading">[] = [
 		modifier: (element, options) => {
 			const {formatOptions} = options;
 
-			element.className = `heading heading--${formatOptions.alias}`;
+			element.className = `heading heading--${formatOptions.level}`;
 		}
 	},
 ];

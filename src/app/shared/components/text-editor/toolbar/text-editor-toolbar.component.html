@@ -1,14 +1,8 @@
 <div class="toolbar">
-	@for (format of formats;track format) {
-		@switch (format.type) {
-			@case ("button") {
-				<app-text-editor-button-action [format]="format"/>
-			}
-			@case ("overlay") {
-				<app-text-editor-overlay-action [format]="format"/>
-			}
-			@case ("select") {
-				<app-text-editor-select-action [format]="format"/>
+	@for (format of formats();track format) {
+		@switch (format) {
+			@case ("") {
+
 			}
 		}
 	}

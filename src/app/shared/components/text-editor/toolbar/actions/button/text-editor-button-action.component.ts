@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, OnInit } from '@angular/core';
+import { Component, computed, inject, input, Input, OnInit } from '@angular/core';
 import { FormatOption } from "../../../models/format-option";
 import { ActiveFormatsService } from "../../../services/active-formats.service";
 import { TextFormatterService } from "../../../services/text-formatter.service";
@@ -21,7 +21,7 @@ import { FormatHelperService } from "../../../services/format-helper/format-help
 	styleUrl: './text-editor-button-action.component.scss'
 })
 export class TextEditorButtonActionComponent {
-	@Input({required: true}) format!: FormatOption<"button">;
+	format = input.required<FormatOption<"button">>();
 
 	activeFormatsService = inject(ActiveFormatsService);
 	formatter = inject(TextFormatterService);
@@ -39,11 +39,11 @@ export class TextEditorButtonActionComponent {
 
 		if(!active.options) return true;
 
-		return this.helper.compareOptions(active.options, this.format.options || {})
+		return this.helper.compareOptions(active.options, this.format().options || {})
 	})
 
 	applyFormat() {
-		this.formatter.applyFormat(this.format.name, this.format.options);
+		this.formatter.applyFormat(this.format().name, this.format().options);
 		this.formatter.normalizeElement(this.editor.editor);
 		this.activeFormatsService.updateActiveFormats();
 	}

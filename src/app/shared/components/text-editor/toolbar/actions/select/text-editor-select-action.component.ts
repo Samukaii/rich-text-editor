@@ -7,6 +7,7 @@ import { ActiveFormatsService } from "../../../services/active-formats.service";
 import { TextFormatterService } from "../../../services/text-formatter.service";
 import { TextEditorComponent } from "../../../text-editor.component";
 
+
 @Component({
 	selector: 'app-text-editor-select-action',
 	standalone: true,
@@ -49,6 +50,7 @@ export class TextEditorSelectActionComponent {
 
 
 	getSelectValue(item: FormatOption<"select">["items"][number]) {
+		//@ts-ignore
 		return this.format.name + item.options?.['level'];
 	}
 }

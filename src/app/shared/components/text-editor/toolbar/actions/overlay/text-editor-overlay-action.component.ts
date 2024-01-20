@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input } from '@angular/core';
+import { Component, computed, inject, input, Input } from '@angular/core';
 import { ActiveFormatsService } from "../../../services/active-formats.service";
 import { FormatOption } from "../../../models/format-option";
 import {
@@ -23,7 +23,7 @@ import { CallPipe } from "../../../../../pipes/call.pipe";
 	styleUrl: './text-editor-overlay-action.component.scss'
 })
 export class TextEditorOverlayActionComponent {
-	@Input({required: true}) format!: FormatOption<"overlay">;
+	test = input.required<FormatOption<"overlay">>()
 
 	activeFormatsService = inject(ActiveFormatsService);
 	formatter = inject(TextFormatterService);
@@ -34,7 +34,7 @@ export class TextEditorOverlayActionComponent {
 	isFormatActive = computed(() => {
 		const all = this.actives();
 
-		return !!all.find(active => active.name === this.format.name)
+		return false;
 	});
 
 	getOptions(format: FormatOption<"overlay">) {

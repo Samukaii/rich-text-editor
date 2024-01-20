@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, DestroyRef, ElementRef, inject, Input, PLATFORM_ID, ViewChild } from '@angular/core';
+import {
+	AfterViewInit,
+	Component,
+	DestroyRef,
+	ElementRef,
+	inject,
+	input,
+	Input,
+	PLATFORM_ID,
+	ViewChild
+} from '@angular/core';
 import { TextFormatterService } from "./services/text-formatter.service";
 import { MatRippleModule } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
@@ -39,8 +49,8 @@ export class TextEditorComponent implements AfterViewInit {
 	private destroyRef = inject(DestroyRef);
 
 	@ViewChild('editor') editorRef!: ElementRef<HTMLElement>;
-	@Input() customToolbar: FormatOption[] = [];
-	@Input() formats: FormatOption[] = [];
+	customToolbar = input<FormatOption[]>([]);
+	formats = input<FormatOption[]>([]);
 
 	get editor() {
 		return this.editorRef.nativeElement;
