@@ -1,9 +1,6 @@
 <div class="toolbar">
 	@for (format of formats();track format) {
-		@switch (format) {
-			@case ("") {
-
-			}
-		}
+		<div #buttonAnchor [attr.data-format-name]="format.name">
+		</div>
 	}
 </div>

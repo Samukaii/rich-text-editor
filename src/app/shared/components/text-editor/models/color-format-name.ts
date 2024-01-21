@@ -1,3 +1,3 @@
-import { FormatName } from "./format.name";
+import { EditorFormatName } from "./editor-format-name";
 
-export type ColorFormatName = Extract<FormatName, `color:${string}`>;
+export type ColorFormatName = Extract<EditorFormatName, `color:${string}`>;

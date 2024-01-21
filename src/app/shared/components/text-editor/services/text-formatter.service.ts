@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
 import { FormatHelperService } from "./format-helper/format-helper.service";
-import { FormatName } from "../models/format.name";
 import { Generic } from "../models/generic";
 import { EditorEventsService } from "./editor-events.service";
 import { ActiveFormatsService } from "./active-formats.service";
+import { EditorFormatName } from "../models/editor-format-name";
 
 export const deepCompareObjects = (first: Generic, second: Generic, depth = 1): boolean => {
 	const firstEntries = Object.entries(first);
@@ -43,7 +43,7 @@ export class TextFormatterService {
 		return selection.getRangeAt(0);
 	}
 
-	applyFormat(formatName: FormatName, options?: Generic) {
+	applyFormat(formatName: EditorFormatName, options?: Generic) {
 		const format = this.helper.getFormat(formatName);
 
 		if(!format) return;
@@ -58,14 +58,14 @@ export class TextFormatterService {
 		}
 	}
 
-	removeFormat(formatName: FormatName) {
+	removeFormat(formatName: EditorFormatName) {
 		const range = this.currentRange;
 		if (!range) return;
 
 		this.removeFormatFromRange(range, formatName);
 	}
 
-	insert(formatName: FormatName, options?: Generic) {
+	insert(formatName: EditorFormatName, options?: Generic) {
 		const element = this.helper.createElement(formatName, options);
 
 		this.currentRange?.insertNode(element);
@@ -102,7 +102,7 @@ export class TextFormatterService {
 		return first as Node;
 	}
 
-	private applyNormalFormat(formatName: FormatName, options?: Generic) {
+	private applyNormalFormat(formatName: EditorFormatName, options?: Generic) {
 		const range = this.currentRange;
 		const format = this.helper.getFormat(formatName);
 
@@ -173,7 +173,7 @@ export class TextFormatterService {
 		first.normalize();
 	}
 
-	private surroundRangeWithFormat(range: Range, formatName: FormatName, options?: Generic) {
+	private surroundRangeWithFormat(range: Range, formatName: EditorFormatName, options?: Generic) {
 		const newTagParent = this.helper.createElement(formatName, options);
 		const content = range.extractContents();
 
@@ -185,7 +185,7 @@ export class TextFormatterService {
 		range.selectNodeContents(newTagParent);
 	}
 
-	private overrideRangeWithFormat(range: Range, formatName: FormatName, options?: Generic) {
+	private overrideRangeWithFormat(range: Range, formatName: EditorFormatName, options?: Generic) {
 		const tagParent = this.findParentFormat(range, formatName);
 		if (!tagParent) return;
 
@@ -206,7 +206,7 @@ export class TextFormatterService {
 		range.selectNodeContents(formatTag)
 	}
 
-	private removeFormatFromRange(range: Range, actionName: FormatName) {
+	private removeFormatFromRange(range: Range, actionName: EditorFormatName) {
 		const tagParent = this.findParentFormat(range, actionName);
 
 		if (!tagParent) return;
@@ -248,7 +248,7 @@ export class TextFormatterService {
 		}
 	}
 
-	private findParentFormat(range: Range, actionName: FormatName) {
+	private findParentFormat(range: Range, actionName: EditorFormatName) {
 		const ancestor = range.commonAncestorContainer;
 
 		if (this.helper.nodeIsFormat(ancestor, actionName)) return ancestor as HTMLElement;
@@ -269,7 +269,7 @@ export class TextFormatterService {
 		return boldElement;
 	}
 
-	private removeFormatFromElement(element: DocumentFragment | Element, formatName: FormatName) {
+	private removeFormatFromElement(element: DocumentFragment | Element, formatName: EditorFormatName) {
 		const children: Element[] = Array.from(element.children);
 
 		if (!children.length) return;

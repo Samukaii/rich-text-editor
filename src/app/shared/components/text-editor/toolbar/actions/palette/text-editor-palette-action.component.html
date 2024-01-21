@@ -1,0 +1,10 @@
+<button
+	mat-icon-button
+	appTextEditorOverlayAction
+	[matTooltip]="tooltip()"
+	[class.toolbar__action--active]="editor.isActive()"
+	[componentConfig]="componentConfig"
+	(mousedown)="$event.preventDefault()"
+>
+	<mat-icon>{{ icon() }}</mat-icon>
+</button>

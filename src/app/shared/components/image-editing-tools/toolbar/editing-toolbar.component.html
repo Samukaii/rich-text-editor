@@ -1,4 +1,4 @@
-@for (button of overlayData.actions(); track button) {
+@for (button of actions(); track button) {
 	<button
 		[matTooltip]="button.tooltip"
 		(mousedown)="$event.preventDefault()"

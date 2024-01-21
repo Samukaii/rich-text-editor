@@ -1,30 +1,15 @@
-import {
-	AfterViewInit,
-	Component,
-	DestroyRef,
-	ElementRef,
-	inject,
-	input,
-	Input,
-	PLATFORM_ID,
-	ViewChild
-} from '@angular/core';
-import { TextFormatterService } from "./services/text-formatter.service";
+import { AfterViewInit, Component, DestroyRef, ElementRef, inject, input, PLATFORM_ID, ViewChild } from '@angular/core';
 import { MatRippleModule } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { FormatOption } from "./models/format-option";
 import { TextEditorToolbarComponent } from "./toolbar/text-editor-toolbar.component";
-import { ActiveFormatsService } from "./services/active-formats.service";
-import { FormatName } from "./models/format.name";
-import { requestUserFile } from "../../functions/request-user-file";
-import { createFileUrl } from "../../functions/create-file-url";
 import { EditorEventsService } from "./services/editor-events.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ImageEditingToolsService } from "../image-editing-tools/image-editing-tools.service";
 import { isPlatformBrowser } from "@angular/common";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ElementRectHelper } from "./helpers/element-rect-helper";
+import { EditorToolbarButton } from "./models/define-custom-toolbar-buttons";
 
 @Component({
 	selector: 'app-text-editor',
@@ -41,36 +26,22 @@ import { ElementRectHelper } from "./helpers/element-rect-helper";
 	providers: [ImageEditingToolsService]
 })
 export class TextEditorComponent implements AfterViewInit {
-	formatter = inject(TextFormatterService);
-	activeFormats = inject(ActiveFormatsService);
 	editorEvents = inject(EditorEventsService);
 	imageEditing = inject(ImageEditingToolsService);
+	@ViewChild('editor') editorRef!: ElementRef<HTMLElement>;
+
 	private platformId = inject(PLATFORM_ID);
 	private destroyRef = inject(DestroyRef);
 
-	@ViewChild('editor') editorRef!: ElementRef<HTMLElement>;
-	customToolbar = input<FormatOption[]>([]);
-	formats = input<FormatOption[]>([]);
+	formats = input<EditorToolbarButton[]>([]);
+
 
 	get editor() {
 		return this.editorRef.nativeElement;
 	}
 
-	applyFormat(actionName: FormatName) {
-		if(actionName === "image") {
-			this.insertImage();
-			return;
-		}
-
-		this.formatter.applyFormat(actionName);
-
-		this.formatter.normalizeElement(this.editor)
-
-		this.activeFormats.updateActiveFormats()
-	}
-
 	ngAfterViewInit() {
-		if(!isPlatformBrowser(this.platformId)) return;
+		if (!isPlatformBrowser(this.platformId)) return;
 
 		this.editorEvents.watchEditorChanges$(this.editor).pipe(
 			takeUntilDestroyed(this.destroyRef)
@@ -83,15 +54,5 @@ export class TextEditorComponent implements AfterViewInit {
 			left: editorLimits.left,
 			top: editorLimits.top,
 		});
-	}
-
-
-	private async insertImage() {
-		const files = await requestUserFile();
-		const src = createFileUrl(files[0]);
-
-		this.editor.focus();
-
-		this.formatter.applyFormat('image', {src});
 	}
 }

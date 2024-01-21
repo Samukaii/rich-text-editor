@@ -1,25 +1,22 @@
-import { inject, Injectable } from '@angular/core';
-import { allTextFormats } from "../../static/all-text-formats";
-
-import { FormatName } from "../../models/format.name";
-import { DOCUMENT } from "@angular/common";
+import { Injectable } from '@angular/core';
 import { Generic } from "../../models/generic";
 import { FormatEditorValidOptions } from "./models/format-editor-valid.options";
 import { EditorFormatName } from "../../models/editor-format-name";
 import { EditorFormatOptions } from "../../models/editor-format-options";
 import { EditorFormat } from "../../models/editor.format";
+import { injectAllFormatOptions } from "../../di/functions/inject-all-format-options";
 
 
 @Injectable({
 	providedIn: 'root'
 })
 export class FormatHelperService {
-	private document = inject(DOCUMENT);
 	private editorPrefix = "editor-format-";
 	private editorOptionsAttribute = "data-editor-options";
+	private allFormatOptions = injectAllFormatOptions();
 
 	getFormat<Name extends EditorFormatName>(formatName: Name) {
-		return allTextFormats.find(
+		return this.allFormatOptions.find(
 			format => format.name === formatName
 		) as EditorFormat<Name> | undefined;
 	}
@@ -79,7 +76,7 @@ export class FormatHelperService {
 		});
 	}
 
-	findFormatOnChildren(element: Element, format: FormatName) {
+	findFormatOnChildren(element: Element, format: EditorFormatName) {
 		const id = `${this.editorPrefix}${format}`;
 
 		let elementFound: HTMLElement | undefined;
@@ -105,7 +102,7 @@ export class FormatHelperService {
 		return elementFound;
 	}
 
-	findFormatOnParent(element: HTMLElement, format: FormatName) {
+	findFormatOnParent(element: HTMLElement, format: EditorFormatName) {
 		const id = `${this.editorPrefix}${format}`;
 		let parent = element.parentElement;
 
@@ -154,7 +151,7 @@ export class FormatHelperService {
 		return node.id.startsWith(this.editorPrefix);
 	}
 
-	nodeIsFormat(node: Node, formatName: FormatName) {
+	nodeIsFormat(node: Node, formatName: EditorFormatName) {
 		if (!this.nodeIsSomeValidFormat(node)) return false;
 
 		return node.id === `${this.editorPrefix}${formatName}`;
@@ -163,7 +160,7 @@ export class FormatHelperService {
 	getNodeFormat(node: Node) {
 		if (!this.nodeIsSomeValidFormat(node)) return null;
 
-		return node.id.replace(this.editorPrefix, "") as FormatName;
+		return node.id.replace(this.editorPrefix, "") as EditorFormatName;
 	}
 
 	getNodeFormatOptions(node: Node) {

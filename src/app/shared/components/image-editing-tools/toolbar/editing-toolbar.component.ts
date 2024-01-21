@@ -1,4 +1,4 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject, input, Signal } from '@angular/core';
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -17,5 +17,5 @@ import { EditingToolbarButton } from "../models/editing-toolbar-button";
   styleUrl: './editing-toolbar.component.scss'
 })
 export class EditingToolbarComponent {
-	overlayData = inject<{ actions: Signal<EditingToolbarButton[]> }>(OVERLAY_DATA_TOKEN);
+	actions = input<EditingToolbarButton[]>();
 }

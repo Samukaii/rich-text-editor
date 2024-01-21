@@ -24,7 +24,9 @@ export class ImageEditingToolsHelperService {
 			anchor: image,
 			component: EditingToolbarComponent,
 			marginY: 30,
-			data: {actions}
+			inputs: {
+				actions: actions()
+			}
 		});
 	}
 

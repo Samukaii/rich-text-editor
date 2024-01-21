@@ -1,18 +1,20 @@
 <div class="toolbar__action--select">
 	<mat-form-field (mousedown)="$event.preventDefault(); $event.stopPropagation()" appearance="fill">
-		<mat-label>{{ format.label }}</mat-label>
-		<mat-select [value]="activeItem | call: actives() : format.name">
-			@for (item of format.items; track item.label) {
+		<mat-label>{{ label() }}</mat-label>
+		<mat-select [value]="activeItem()">
+			@for (item of options(); track item.label) {
 				<mat-option
-					(click)="applyFormat(item)"
-					[value]="getSelectValue | call: item">
+					(click)="editor.applyFormat({
+						level: item.level
+					})"
+					[value]="item.level">
 					{{ item.label }}
 				</mat-option>
 			}
 			<mat-option
-				(click)="removeFormat()"
-				[value]="'heading:remove'">
-				{{ "Texto normal" }}
+				(click)="editor.removeFormat()"
+				[value]="0">
+				{{ normalLabel() }}
 			</mat-option>
 		</mat-select>
 	</mat-form-field>

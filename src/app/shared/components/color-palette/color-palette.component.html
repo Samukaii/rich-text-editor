@@ -1,10 +1,12 @@
 <div class="palette">
-	@for (color of data.options.colors; track color) {
+	@for (color of colors(); track color) {
 		<div
 			[matTooltip]="color.tooltip"
 			class="color"
 			(mousedown)="$event.preventDefault();"
-			(click)="applyColor(color.color)"
+			(click)="editor().applyFormat({
+				color: color.color
+			})"
 			matRipple
 			[matRippleColor]="'#fff8'"
 			[style.background-color]="color.color"
@@ -21,7 +23,7 @@
 		matTooltip="Sem cor"
 		class="color remove"
 		(mousedown)="$event.preventDefault();"
-		(click)="removeColor()"
+		(click)="editor().removeFormat()"
 		matRipple
 		[matRippleColor]="'#fff8'"
 		[matRippleRadius]="50">

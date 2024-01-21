@@ -5,19 +5,20 @@ import { colorFormats } from "./color-formats";
 import { backgroundColorsFormats } from "./background-colors-formats";
 import { EditorFormat } from "../models/editor.format";
 import { listFormats } from "./list-formats";
+import { imageFormats } from "./image-formats";
 
-export const allTextFormats: EditorFormat[] = [
+export const defaultTextFormats: EditorFormat[] = [
 	...commonFormats,
 	...alignmentFormats,
 	...headingFormats,
 	...colorFormats,
 	...backgroundColorsFormats,
 	...listFormats,
-
+	...imageFormats,
 ];
 
 declare global {
-	export interface AllEditorFormats {
+	export interface DefineCustomEditorFormats {
 		bold: {},
 		italic: {},
 		strikethrough: {},

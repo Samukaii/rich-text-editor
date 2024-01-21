@@ -4,7 +4,7 @@
 		(mousedown)="$event.preventDefault()"
 		[class.toolbar__action--active]="editor.isActive()"
 		mat-icon-button
-		(click)="editor.applyFormat()"
+		(click)="insertImage()"
 	>
 		<mat-icon>{{ icon() }}</mat-icon>
 	</button>

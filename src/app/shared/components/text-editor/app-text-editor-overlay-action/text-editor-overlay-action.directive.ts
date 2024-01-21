@@ -1,17 +1,22 @@
-import { Directive, ElementRef, HostListener, inject, Input, OnDestroy, Type } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, input, Input, OnDestroy, Type } from '@angular/core';
 import { Generic } from "../models/generic";
 import { OverlayCreatorService } from "../../../services/overlay-creator/overlay-creator.service";
 import { OverlayCreatorOptions } from "../../../services/overlay-creator/models/overlay-creator-options";
 import { filter, Subscription, take } from "rxjs";
-import { OverlayRef } from "@angular/cdk/overlay";
+import { ComponentType, OverlayRef } from "@angular/cdk/overlay";
+import { ComponentInputs } from "../../../models/component-inputs";
+
+export interface ComponentOverlayConfig<T extends ComponentType<any>> {
+	component: T,
+	inputs: ComponentInputs<InstanceType<T>>;
+}
 
 @Directive({
   selector: '[appTextEditorOverlayAction]',
   standalone: true,
 })
-export class TextEditorOverlayActionDirective implements OnDestroy {
-	@Input({required: true}) component!: Type<any>;
-	@Input() options: Generic = {};
+export class TextEditorOverlayActionDirective<T extends Type<any>> implements OnDestroy {
+	componentConfig = input.required<ComponentOverlayConfig<T>>();
 
 	overlayCreator = inject(OverlayCreatorService);
 	elementRef = inject(ElementRef);
@@ -32,10 +37,8 @@ export class TextEditorOverlayActionDirective implements OnDestroy {
 
 		this.overlayOptions = this.overlayCreator.open({
 			anchor: this.elementRef.nativeElement,
-			component: this.component,
-			data: {
-				options: this.options
-			}
+			component: this.componentConfig().component,
+			inputs: this.componentConfig().inputs
 		});
 
 		this.watchClose(this.overlayOptions.overlayRef);

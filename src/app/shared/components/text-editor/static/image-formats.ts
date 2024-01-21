@@ -21,4 +21,6 @@ const image: EditorFormat<"image"> = {
 	}
 };
 
-export const imageFormats = [];
+export const imageFormats = [
+	image
+];

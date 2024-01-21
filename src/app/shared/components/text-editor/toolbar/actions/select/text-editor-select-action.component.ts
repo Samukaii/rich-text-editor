@@ -1,12 +1,8 @@
-import { Component, computed, inject, Input } from '@angular/core';
-import { FormatOption } from "../../../models/format-option";
+import { Component, computed, input } from '@angular/core';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
 import { CallPipe } from "../../../../../pipes/call.pipe";
-import { ActiveFormatsService } from "../../../services/active-formats.service";
-import { TextFormatterService } from "../../../services/text-formatter.service";
-import { TextEditorComponent } from "../../../text-editor.component";
-
+import { injectToolbarButtonOptions } from "../../../di/functions/inject-toolbar-button-options";
 
 @Component({
 	selector: 'app-text-editor-select-action',
@@ -20,37 +16,17 @@ import { TextEditorComponent } from "../../../text-editor.component";
 	styleUrl: './text-editor-select-action.component.scss'
 })
 export class TextEditorSelectActionComponent {
-	@Input({required: true}) format!: FormatOption<"select">;
+	label = input("Título");
+	normalLabel = input("Texto normal");
+	options = input([
+		{label: "Título 1", level: 1 as 1},
+		{label: "Título 2", level: 2 as 2},
+		{label: "Título 3", level: 3 as 3},
+	]);
 
-	activeFormatsService = inject(ActiveFormatsService);
-	formatter = inject(TextFormatterService);
-	editor = inject(TextEditorComponent);
-
-	actives = computed(() => this.activeFormatsService.activeFormats());
+	editor = injectToolbarButtonOptions<"heading">();
 
 	activeItem = computed(() => {
-		const all = this.actives();
-
-		const active = all.find(active => active.name === this.format.name);
-
-		if (!active) return "heading:remove";
-
-		return this.format.name + active.options?.["level"];
+		return this.editor.activeOptions()?.level || 0
 	})
-
-	applyFormat(item: FormatOption<"select">["items"][number]) {
-		this.formatter.applyFormat(this.format.name, item.options);
-		this.formatter.normalizeElement(this.editor.editor);
-		this.activeFormatsService.updateActiveFormats();
-	}
-
-	removeFormat() {
-		this.formatter.removeFormat(this.format.name)
-	}
-
-
-	getSelectValue(item: FormatOption<"select">["items"][number]) {
-		//@ts-ignore
-		return this.format.name + item.options?.['level'];
-	}
 }
