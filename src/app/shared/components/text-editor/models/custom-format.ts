@@ -1,6 +1,8 @@
-import { Generic } from "./generic";
 import { EditorFormatName } from "./editor-format-name";
 import { EditorFormatOptions } from "./editor-format-options";
+import { InjectableType } from "@angular/core";
+import { defaultEditorInsertionStrategy } from "../static/default-editor-insertion-strategy";
+import { EditorFormatStrategy } from "./editor-format-strategy";
 
 export interface EditorModifierOptions<Name extends EditorFormatName> {
 	formatOptions: EditorFormatOptions<Name>;
@@ -13,10 +15,10 @@ export interface EditorModifierOptions<Name extends EditorFormatName> {
 }
 
 
-export type EditorFormat<Name extends EditorFormatName = EditorFormatName> = {
+export type EditorFormatConfig<Name extends EditorFormatName = EditorFormatName> = {
 	name: Name;
 	autoRemove?: boolean;
-	insertionStrategy: 'surround-selection' | 'insert-in-new-line' | 'insert-in-same-line',
+	formatStrategy: (keyof typeof defaultEditorInsertionStrategy) | InjectableType<EditorFormatStrategy>,
 	editable?: boolean;
 	nodeName: keyof HTMLElementTagNameMap;
 	modifier?: (element: HTMLElement, options: EditorModifierOptions<Name>) => void;

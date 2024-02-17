@@ -1,8 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
 import { injectToolbarButtonOptions } from "../../../di/functions/inject-toolbar-button-options";
+import { ToolbarButtonActionsService } from "../../toolbar-button-actions.service";
 
 @Component({
 	selector: 'app-text-editor-button-action',
@@ -19,5 +20,5 @@ export class TextEditorButtonActionComponent {
 	icon = input<string>();
 	tooltip = input<string>("");
 
-	editor = injectToolbarButtonOptions();
+	editor = inject(ToolbarButtonActionsService);
 }

@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import {
 	ComponentOverlayConfig,
 	TextEditorOverlayActionDirective
@@ -9,6 +9,7 @@ import { CallPipe } from "../../../../../pipes/call.pipe";
 import { injectToolbarButtonOptions } from "../../../di/functions/inject-toolbar-button-options";
 import { ColorPaletteComponent } from "../../../../color-palette/color-palette.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { ToolbarButtonActionsService } from "../../toolbar-button-actions.service";
 
 @Component({
 	selector: 'app-text-editor-palette-action',
@@ -38,11 +39,11 @@ export class TextEditorPaletteActionComponent {
 		},
 		{
 			tooltip: "Verde",
-			color: "Green"
+			color: "green"
 		},
 	])
 
-	editor = injectToolbarButtonOptions<"color" | "background-color">();
+	editor = inject<ToolbarButtonActionsService<"color" | "background-color">>(ToolbarButtonActionsService);
 
 	componentConfig: ComponentOverlayConfig<typeof ColorPaletteComponent> = {
 		component: ColorPaletteComponent,
