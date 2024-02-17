@@ -1,8 +1,8 @@
 import { Provider } from "@angular/core";
-import { EditorFormat } from "../../models/editor.format";
+import { CustomFormat } from "../../models/custom-format";
 import { EDITOR_CUSTOM_FORMAT_OPTIONS_TOKEN } from "../tokens/editor-custom-format-options.token";
 
-export const provideCustomFormatOptions = (formatOptions: EditorFormat[]): Provider[] => {
+export const provideCustomFormatOptions = (formatOptions: CustomFormat[]): Provider[] => {
 	return [
 		{
 			provide: EDITOR_CUSTOM_FORMAT_OPTIONS_TOKEN,

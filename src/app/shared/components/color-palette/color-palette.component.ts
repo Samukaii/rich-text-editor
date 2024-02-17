@@ -4,7 +4,7 @@ import { MatRippleModule } from "@angular/material/core";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { JsonPipe } from "@angular/common";
 import { EditorFormatName } from "../text-editor/models/editor-format-name";
-import { injectToolbarButtonOptions } from "../text-editor/di/functions/inject-toolbar-button-options";
+import { ToolbarButtonActionsService } from "../text-editor/toolbar/toolbar-button-actions.service";
 
 @Component({
   selector: 'app-color-palette',
@@ -19,7 +19,7 @@ import { injectToolbarButtonOptions } from "../text-editor/di/functions/inject-t
   styleUrl: './color-palette.component.scss'
 })
 export class ColorPaletteComponent {
-	editor = input.required<ReturnType<typeof injectToolbarButtonOptions<"color" | "background-color">>>();
+	editor = input.required<ToolbarButtonActionsService<"color" | "background-color">>();
 	format = input.required<EditorFormatName>();
 	colors = input.required<{
 		tooltip: string;

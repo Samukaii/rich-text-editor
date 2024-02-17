@@ -6,7 +6,6 @@ import {
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { CallPipe } from "../../../../../pipes/call.pipe";
-import { injectToolbarButtonOptions } from "../../../di/functions/inject-toolbar-button-options";
 import { ColorPaletteComponent } from "../../../../color-palette/color-palette.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ToolbarButtonActionsService } from "../../toolbar-button-actions.service";

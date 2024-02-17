@@ -1,9 +1,9 @@
-import { EditorFormat } from "../models/editor.format";
+import { CustomFormat } from "../models/custom-format";
 
-export const colorFormats: EditorFormat<"color">[] = [
+export const colorFormats: CustomFormat<"color">[] = [
 	{
 		name: "color",
-		insertionStrategy: 'surround-selection',
+		formatStrategy: 'surround-selection',
 		nodeName: 'span',
 		modifier: (element, options) => {
 			const {formatOptions} = options;

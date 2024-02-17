@@ -29,6 +29,7 @@ export class OverlayCreatorService {
 
 		return {
 			overlayRef: popover,
+			ref: componentRef,
 			instance: componentRef.instance,
 			close: () => popover.dispose()
 		};

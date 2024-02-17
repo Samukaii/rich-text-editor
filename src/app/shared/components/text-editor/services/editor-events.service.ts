@@ -1,19 +1,20 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { Observable, tap } from "rxjs";
-
+import { BehaviorSubject, Observable, tap } from "rxjs";
 
 @Injectable({
 	providedIn: 'root'
 })
 export class EditorEventsService {
 	private editorChanges = signal<MutationRecord[]>([]);
+	private _editorChanges$ = new BehaviorSubject<MutationRecord[]>([]);
 	private editor?: HTMLElement;
 
 	watchEditorChanges$(editor: HTMLElement) {
 		this.editor = editor;
 
 		return this.watchElementMutations(editor).pipe(
-			tap(mutations => this.editorChanges.set(mutations))
+			tap(mutations => this.editorChanges.set(mutations)),
+			tap(mutations => this._editorChanges$.next(mutations)),
 		);
 	}
 
@@ -31,7 +32,7 @@ export class EditorEventsService {
 				observer.next(mutations);
 			});
 
-			mutationObserver.observe(element, {childList: true, subtree: true});
+			mutationObserver.observe(element, {characterData: true, childList: true, subtree: true});
 
 			return () => mutationObserver.disconnect();
 		});

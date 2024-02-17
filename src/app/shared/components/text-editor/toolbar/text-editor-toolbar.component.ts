@@ -30,6 +30,8 @@ import { TOOLBAR_BUTTON_OPTIONS_TOKEN } from "../di/tokens/toolbar-button-option
 import { TextEditorComponent } from "../text-editor.component";
 import { EditorFormatName } from "../models/editor-format-name";
 import { injectToolbarButtonsConfig } from "../di/functions/inject-toolbar-buttons-config";
+import { TextFormatterService } from "../services/text-formatter.service";
+import { ToolbarButtonActionsService } from "./toolbar-button-actions.service";
 
 @Component({
 	selector: 'app-text-editor-toolbar',
@@ -55,6 +57,7 @@ import { injectToolbarButtonsConfig } from "../di/functions/inject-toolbar-butto
 export class TextEditorToolbarComponent implements OnInit, AfterViewInit {
 	allToolbarButtons = injectToolbarButtonsConfig();
 	activeFormatsService = inject(ActiveFormatsService);
+	formatter = inject(TextFormatterService);
 	@ViewChildren('buttonAnchor', {read: ViewContainerRef}) anchors!: QueryList<ViewContainerRef>;
 
 	textEditor = inject(TextEditorComponent);
@@ -83,12 +86,24 @@ export class TextEditorToolbarComponent implements OnInit, AfterViewInit {
 		const injector = Injector.create({
 			providers: [
 				{
+					provide: TextFormatterService,
+					useValue: this.formatter
+				},
+				{
+					provide: ActiveFormatsService,
+					useValue: this.activeFormatsService
+				},
+				{
 					provide: TOOLBAR_BUTTON_OPTIONS_TOKEN,
 					useValue: {
 						name: formatName,
 						options: options || defaultOptions,
 						editorElement: this.textEditor.editor
 					}
+				},
+				{
+					provide: ToolbarButtonActionsService,
+					useClass: ToolbarButtonActionsService
 				}
 			]
 		});

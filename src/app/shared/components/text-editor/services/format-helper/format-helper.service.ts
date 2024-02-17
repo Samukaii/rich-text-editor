@@ -3,7 +3,7 @@ import { Generic } from "../../models/generic";
 import { FormatEditorValidOptions } from "./models/format-editor-valid.options";
 import { EditorFormatName } from "../../models/editor-format-name";
 import { EditorFormatOptions } from "../../models/editor-format-options";
-import { EditorFormat } from "../../models/editor.format";
+import { CustomFormat } from "../../models/custom-format";
 import { injectAllFormatOptions } from "../../di/functions/inject-all-format-options";
 
 
@@ -18,7 +18,7 @@ export class FormatHelperService {
 	getFormat<Name extends EditorFormatName>(formatName: Name) {
 		return this.allFormatOptions.find(
 			format => format.name === formatName
-		) as EditorFormat<Name> | undefined;
+		) as CustomFormat<Name> | undefined;
 	}
 
 	createElement<Name extends EditorFormatName>(name: Name, options?: EditorFormatOptions<Name>) {
@@ -38,11 +38,29 @@ export class FormatHelperService {
 			});
 
 		element.id = `${this.editorPrefix}${format.name}`;
+
+		if(format.editable === false)
+			element.setAttribute("contentEditable", "false");
+
 		if(options) {
 			element.setAttribute(this.editorOptionsAttribute, this.identifyByOptions(options))
 		}
 
 		return element;
+	}
+
+	createRegexElement<Name extends EditorFormatName>(name: Name, options?: EditorFormatOptions<Name>) {
+		const element = this.createElement(name, options);
+
+		element.setAttribute('data-editor-regex-format', "true");
+
+		return element;
+	}
+
+	nodeIsRegexFormat(element: Node) {
+		if(!this.nodeIsSomeValidFormat(element)) return false;
+
+		return element.getAttribute('data-editor-regex-format') === "true";
 	}
 
 	private identifyByOptions(options: Generic) {

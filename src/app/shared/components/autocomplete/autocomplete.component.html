@@ -1,1 +1,10 @@
-<p>autocomplete works!</p>
+<ul>
+	@for (item of searched(); track item) {
+		<li
+			(click)="onSelect()?.(item)"
+			matRipple>
+			{{ item.name }}
+		</li>
+	}
+</ul>
+

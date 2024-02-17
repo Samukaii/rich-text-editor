@@ -1,9 +1,9 @@
-import { EditorFormat } from "../models/editor.format";
+import { CustomFormat } from "../models/custom-format";
 
-export const headingFormats: EditorFormat<"heading">[] = [
+export const headingFormats: CustomFormat<"heading">[] = [
 	{
 		name: "heading",
-		insertionStrategy: 'surround-selection',
+		formatStrategy: 'surround-selection',
 		nodeName: 'h1',
 		modifier: (element, options) => {
 			const {formatOptions} = options;

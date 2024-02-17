@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, DestroyRef, ElementRef, inject, input, PLATFORM_ID, ViewChild } from '@angular/core';
+import {
+	AfterViewInit,
+	Component,
+	DestroyRef,
+	effect,
+	ElementRef,
+	inject,
+	input,
+	PLATFORM_ID,
+	ViewChild
+} from '@angular/core';
 import { MatRippleModule } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -6,10 +16,15 @@ import { TextEditorToolbarComponent } from "./toolbar/text-editor-toolbar.compon
 import { EditorEventsService } from "./services/editor-events.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ImageEditingToolsService } from "../image-editing-tools/image-editing-tools.service";
-import { isPlatformBrowser } from "@angular/common";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ElementRectHelper } from "./helpers/element-rect-helper";
 import { EditorToolbarButton } from "./models/define-custom-toolbar-buttons";
+import { EditorRegexFormatService } from "./editor-regex-format.service";
+import { EditorMatchRule } from "./models/editor-match-rule";
+import { TextSegmentControllerService } from "./text-segment-controller.service";
+import { TextFormatterService } from "./services/text-formatter.service";
+import { isPlatformBrowser, JsonPipe } from "@angular/common";
+import { ActiveFormatsService } from "./services/active-formats.service";
 
 @Component({
 	selector: 'app-text-editor',
@@ -19,34 +34,51 @@ import { EditorToolbarButton } from "./models/define-custom-toolbar-buttons";
 		MatButtonModule,
 		MatIconModule,
 		TextEditorToolbarComponent,
-		MatTooltipModule
+		MatTooltipModule,
+		JsonPipe,
 	],
 	templateUrl: './text-editor.component.html',
 	styleUrl: './text-editor.component.scss',
-	providers: [ImageEditingToolsService]
+	providers: [
+		ActiveFormatsService,
+		EditorRegexFormatService,
+		TextSegmentControllerService,
+		ImageEditingToolsService,
+		TextFormatterService,
+	]
 })
 export class TextEditorComponent implements AfterViewInit {
-	editorEvents = inject(EditorEventsService);
-	imageEditing = inject(ImageEditingToolsService);
+	private editorEvents = inject(EditorEventsService);
+	private imageEditing = inject(ImageEditingToolsService);
+	private regex = inject(EditorRegexFormatService);
+	private destroyRef = inject(DestroyRef);
+	protected segmentsController = inject(TextSegmentControllerService);
+	private platform = inject(PLATFORM_ID);
 	@ViewChild('editor') editorRef!: ElementRef<HTMLElement>;
 
-	private platformId = inject(PLATFORM_ID);
-	private destroyRef = inject(DestroyRef);
+	formats = input.required<EditorToolbarButton[]>();
+	regexRules = input<EditorMatchRule[]>([]);
 
-	formats = input<EditorToolbarButton[]>([]);
-
+	private setRegexRules = effect(() => {
+		this.regex.setRegexRules(this.editor, this.regexRules());
+	});
 
 	get editor() {
 		return this.editorRef.nativeElement;
 	}
 
-	ngAfterViewInit() {
-		if (!isPlatformBrowser(this.platformId)) return;
+	ngAfterViewInit(): void {
+		if(!isPlatformBrowser(this.platform)) return;
+		this.setControllerEditor();
+		this.watchEditorChanges();
+		this.setImageResizing();
+	}
 
-		this.editorEvents.watchEditorChanges$(this.editor).pipe(
-			takeUntilDestroyed(this.destroyRef)
-		).subscribe();
+	private setControllerEditor() {
+		this.segmentsController.setElement(this.editor);
+	}
 
+	private setImageResizing() {
 		const editorLimits = ElementRectHelper.getRectInsidePadding(this.editor);
 
 		this.imageEditing.setResizeLimitation({
@@ -54,5 +86,11 @@ export class TextEditorComponent implements AfterViewInit {
 			left: editorLimits.left,
 			top: editorLimits.top,
 		});
+	}
+
+	private watchEditorChanges() {
+		this.editorEvents.watchEditorChanges$(this.editor).pipe(
+			takeUntilDestroyed(this.destroyRef)
+		).subscribe();
 	}
 }

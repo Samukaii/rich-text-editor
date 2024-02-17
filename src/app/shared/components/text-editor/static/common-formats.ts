@@ -1,30 +1,31 @@
-import {  EditorFormat } from "../models/editor.format";
+import { CustomFormat } from "../models/custom-format";
 
-const bold: EditorFormat<"bold"> = {
+
+const bold: CustomFormat<"bold"> = {
 	name: "bold",
 	autoRemove: true,
-	insertionStrategy: 'surround-selection',
+	formatStrategy: 'surround-selection',
 	nodeName: 'strong',
 }
 
-const italic: EditorFormat<"italic"> = {
+const italic: CustomFormat<"italic"> = {
 	name: "italic",
 	autoRemove: true,
-	insertionStrategy: 'surround-selection',
+	formatStrategy: 'surround-selection',
 	nodeName: 'em',
 }
 
-const strikethrough: EditorFormat<"strikethrough"> = {
+const strikethrough: CustomFormat<"strikethrough"> = {
 	name: "strikethrough",
 	autoRemove: true,
-	insertionStrategy: 'surround-selection',
+	formatStrategy: 'surround-selection',
 	nodeName: 's',
 }
 
-const underlined: EditorFormat<"underlined"> = {
+const underlined: CustomFormat<"underlined"> = {
 	name: "underlined",
 	autoRemove: true,
-	insertionStrategy: 'surround-selection',
+	formatStrategy: 'surround-selection',
 	nodeName: 'u',
 }
 

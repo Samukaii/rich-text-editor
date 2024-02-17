@@ -164,6 +164,10 @@ img {
 	}
 }
 
+.editor-format-character {
+	color: red;
+}
+
 .element-highlight {
 	position: absolute;
 	box-shadow: 0 0 20px #919191;
@@ -176,4 +180,13 @@ img {
 	&.hidden {
 		opacity: 0;
 	}
+}
+
+#editor-format-mention {
+	display: inline-block;
+	padding: .2rem .5rem;
+	background-color: purple;
+	color: white;
+	border-radius: 15px;
+	cursor: default;
 }

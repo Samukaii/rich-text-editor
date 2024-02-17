@@ -1,7 +1,21 @@
 import { EditorFormat } from "./editor-format";
 
-export interface MatchRule {
-	matcher: RegExp | string | ((text: string) => {start: number; end: number} | false);
+export type MatchRuleResult = {start: number; end: number};
+export type MatchRuleFn = (info: {
+	prevText: string;
+	currentText: string;
+	insertedCharacter?: {
+		start: number,
+		end: number,
+		value: string;
+	}
+}) => MatchRuleResult[];
+
+
+export interface EditorMatchRule {
+	matcher: RegExp | string | MatchRuleFn;
+	caseSensitive?: boolean;
 	format: EditorFormat;
+	whiteSpace?: boolean;
 	onMatch?: (formattedElement: HTMLElement) => void;
 }

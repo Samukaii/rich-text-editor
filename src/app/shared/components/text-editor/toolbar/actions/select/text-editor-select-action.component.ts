@@ -2,7 +2,6 @@ import { Component, computed, inject, input } from '@angular/core';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
 import { CallPipe } from "../../../../../pipes/call.pipe";
-import { injectToolbarButtonOptions } from "../../../di/functions/inject-toolbar-button-options";
 import { ToolbarButtonActionsService } from "../../toolbar-button-actions.service";
 
 @Component({

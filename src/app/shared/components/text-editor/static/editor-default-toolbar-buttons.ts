@@ -24,7 +24,7 @@ export const EDITOR_DEFAULT_TOOLBAR_BUTTONS = {
 	}),
 	color: defineToolbarButtonComponent(TextEditorPaletteActionComponent, {
 		tooltip: "Cor do texto",
-		icon: "format_color_text"
+		icon: "format_color_text",
 	}),
 	"list:ordered": defineToolbarButtonComponent(TextEditorListActionComponent, {
 		tooltip: "Lista ordenada",
@@ -40,10 +40,10 @@ export const EDITOR_DEFAULT_TOOLBAR_BUTTONS = {
 	}),
 	heading: defineToolbarButtonComponent(TextEditorSelectActionComponent, {
 		label: "Títulos",
-		normalLabel: "Taexto normal",
+		normalLabel: "Texto normal",
 		options: [
 			{
-				label: "Títualao 1",
+				label: "Título 1",
 				level: 1
 			},
 			{
@@ -51,7 +51,7 @@ export const EDITOR_DEFAULT_TOOLBAR_BUTTONS = {
 				level: 2
 			},
 			{
-				label: "Títulso 3",
+				label: "Título 3",
 				level: 3
 			},
 		]

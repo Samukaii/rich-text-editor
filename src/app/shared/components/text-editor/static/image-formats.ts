@@ -1,8 +1,8 @@
-import { EditorFormat } from "../models/editor.format";
+import { CustomFormat } from "../models/custom-format";
 
-const image: EditorFormat<"image"> = {
+const image: CustomFormat<"image"> = {
 	name: "image",
-	insertionStrategy: 'insert-in-new-line',
+	formatStrategy: 'insert-in-new-line',
 	nodeName: "div",
 	modifier: (element, options) => {
 		const {editor, formatOptions} = options;

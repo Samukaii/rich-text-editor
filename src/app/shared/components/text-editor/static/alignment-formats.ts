@@ -1,9 +1,9 @@
-import { EditorFormat } from "../models/editor.format";
+import { CustomFormat } from "../models/custom-format";
 
-export const alignmentFormats: EditorFormat<"align">[] = [
+export const alignmentFormats: CustomFormat<"align">[] = [
 	{
 		name: "align",
-		insertionStrategy: 'surround-selection',
+		formatStrategy: 'surround-selection',
 		nodeName: "div",
 		modifier: (element, options) => {
 			const {formatOptions} = options;

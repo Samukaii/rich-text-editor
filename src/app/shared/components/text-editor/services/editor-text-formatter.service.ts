@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
 import { FormatHelperService } from "./format-helper/format-helper.service";
 import { Generic } from "../models/generic";
@@ -7,11 +7,12 @@ import { EditorFormatName } from "../models/editor-format-name";
 import { TextSegmentControllerService } from "../text-segment-controller.service";
 
 @Injectable()
-export class TextFormatterService {
+export class EditorTextFormatterService {
 	document = inject(DOCUMENT);
 	helper = inject(FormatHelperService);
 	editor = inject(EditorEventsService);
 	controller = inject(TextSegmentControllerService);
+	injector = inject(Injector);
 	emptyNodeException = [
 		"br",
 		"#text-editor",
@@ -39,7 +40,7 @@ export class TextFormatterService {
 			this.controller.removeFormat(cursor, formatName);
 		else {
 			this.controller.removeFormat(cursor, formatName);
-			this.controller.surroundWith(cursor.start, cursor.end, element);
+			this.controller.surroundWith(cursor, element);
 		}
 
 		if(cursor) this.controller.setCursor(cursor);
@@ -52,7 +53,7 @@ export class TextFormatterService {
 
 		if(!format) return;
 
-		switch (format.insertionStrategy) {
+		switch (format.formatStrategy) {
 			case "surround-selection":
 				this.applyNormalFormat(formatName, options);
 				break;

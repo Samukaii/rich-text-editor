@@ -6,11 +6,10 @@ import { Generic } from "../models/generic";
 export interface ActiveFormat {
 	name: string;
 	options?: Generic;
+	element: Element;
 }
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class ActiveFormatsService {
 	document = inject(DOCUMENT);
 	zone = inject(NgZone);
@@ -49,16 +48,25 @@ export class ActiveFormatsService {
 	}
 
 	getFormats(range: Range) {
-		let formats: ActiveFormat[] = [];
+		let element: Element | null = range.commonAncestorContainer instanceof Element
+			? range.commonAncestorContainer
+			: range.commonAncestorContainer.parentElement;
 
-		let parent: Element | null = range.commonAncestorContainer instanceof Element ? range.commonAncestorContainer : range.commonAncestorContainer.parentElement;
+		if(!element) return [];
+
+		return this.getElementFormats(element);
+	}
+
+	getElementFormats(element: Node) {
+		let formats: ActiveFormat[] = [];
+		let parent: Element | null = element instanceof Element ? element : element.parentElement;
 
 		while (parent && parent.id !== "text-editor") {
 			const name = this.helper.getNodeFormat(parent);
 			const options = this.helper.getNodeFormatOptions(parent);
 
 
-			if(name) formats.push({name, options});
+			if(name) formats.push({name, options, element: parent});
 
 			parent = parent.parentElement;
 		}

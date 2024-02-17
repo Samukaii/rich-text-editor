@@ -3,11 +3,11 @@ import { alignmentFormats } from "./alignment-formats";
 import { headingFormats } from "./heading-formats";
 import { colorFormats } from "./color-formats";
 import { backgroundColorsFormats } from "./background-colors-formats";
-import { EditorFormat } from "../models/editor.format";
+import { CustomFormat } from "../models/custom-format";
 import { listFormats } from "./list-formats";
 import { imageFormats } from "./image-formats";
 
-export const defaultTextFormats: EditorFormat[] = [
+export const defaultTextFormats: CustomFormat[] = [
 	...commonFormats,
 	...alignmentFormats,
 	...headingFormats,

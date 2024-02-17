@@ -1,10 +1,10 @@
-import { EditorFormat } from "../models/editor.format";
+import { CustomFormat } from "../models/custom-format";
 
 
-const bullets: EditorFormat<"list:bullets"> = {
+const bullets: CustomFormat<"list:bullets"> = {
 	name: "list:bullets",
 	nodeName: "ul",
-	insertionStrategy: 'insert-in-new-line',
+	formatStrategy: 'insert-in-new-line',
 	modifier: (element) => {
 		const li = document.createElement('li');
 
@@ -14,10 +14,10 @@ const bullets: EditorFormat<"list:bullets"> = {
 	}
 };
 
-const ordered: EditorFormat<"list:ordered"> = {
+const ordered: CustomFormat<"list:ordered"> = {
 	name: "list:ordered",
 	nodeName: "ol",
-	insertionStrategy: 'insert-in-new-line',
+	formatStrategy: 'insert-in-new-line',
 	modifier: (element) => {
 		const li = document.createElement('li');
 

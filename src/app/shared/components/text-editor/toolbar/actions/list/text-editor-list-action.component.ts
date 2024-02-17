@@ -2,9 +2,6 @@ import { Component, inject, input } from '@angular/core';
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import {
-	injectToolbarButtonOptions
-} from "../../../di/functions/inject-toolbar-button-options";
 import { ToolbarButtonActionsService } from "../../toolbar-button-actions.service";
 
 
