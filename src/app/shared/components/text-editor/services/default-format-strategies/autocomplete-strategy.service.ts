@@ -58,11 +58,8 @@ export class AutocompleteStrategyService implements EditorFormatStrategy<"autoco
 		this.autocomplete.open(info.element, this.options, item => {
 			this.controller.deleteContent(cursor);
 
-			const element = this.helper.createElement("mention", {
-				item: {
-					id: item.id,
-					name: `#${item.name}`
-				}
+			const element = this.helper.createElement("autocomplete", {
+				character: options?.character ?? "@"
 			})
 
 			this.controller.insertElement(element, cursor.start);

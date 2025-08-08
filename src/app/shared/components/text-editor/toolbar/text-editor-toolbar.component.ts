@@ -15,16 +15,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSelectModule } from "@angular/material/select";
 import { ActiveFormatsService } from "../services/active-formats.service";
-import { JsonPipe, NgTemplateOutlet } from "@angular/common";
-import { CallPipe } from "../../../pipes/call.pipe";
-import { ColorPaletteComponent } from "../../color-palette/color-palette.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
-import {
-	TextEditorOverlayActionDirective
-} from "../app-text-editor-overlay-action/text-editor-overlay-action.directive";
-import { TextEditorSelectActionComponent } from "./actions/select/text-editor-select-action.component";
-import { TextEditorButtonActionComponent } from "./actions/button/text-editor-button-action.component";
-import { TextEditorPaletteActionComponent } from "./actions/palette/text-editor-palette-action.component";
 import { EditorToolbarButton } from "../models/define-custom-toolbar-buttons";
 import { TOOLBAR_BUTTON_OPTIONS_TOKEN } from "../di/tokens/toolbar-button-options.token";
 import { TextEditorComponent } from "../text-editor.component";
@@ -41,15 +32,7 @@ import { ToolbarButtonActionsService } from "./toolbar-button-actions.service";
 		MatButtonModule,
 		MatIconModule,
 		MatSelectModule,
-		JsonPipe,
-		CallPipe,
-		ColorPaletteComponent,
-		MatTooltipModule,
-		TextEditorOverlayActionDirective,
-		TextEditorSelectActionComponent,
-		TextEditorButtonActionComponent,
-		TextEditorPaletteActionComponent,
-		NgTemplateOutlet
+		MatTooltipModule
 	],
 	templateUrl: './text-editor-toolbar.component.html',
 	styleUrl: './text-editor-toolbar.component.scss'

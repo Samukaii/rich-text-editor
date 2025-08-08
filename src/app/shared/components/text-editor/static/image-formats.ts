@@ -7,6 +7,8 @@ const image: CustomFormat<"image"> = {
 	modifier: (element, options) => {
 		const {editor, formatOptions} = options;
 
+		console.log(element);
+
 		const alignment = editor.createFormat("align", {
 			alignment: "left"
 		});

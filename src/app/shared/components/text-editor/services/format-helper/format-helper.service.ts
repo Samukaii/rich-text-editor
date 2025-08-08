@@ -21,6 +21,8 @@ export class FormatHelperService {
 		) as CustomFormat<Name> | undefined;
 	}
 
+
+
 	createElement<Name extends EditorFormatName>(name: Name, options?: EditorFormatOptions<Name>) {
 		const format = this.getFormat(name);
 

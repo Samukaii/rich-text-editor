@@ -25,6 +25,9 @@ export class TextEditorImageActionComponent {
 
 	async insertImage() {
 		const files = await requestUserFile();
+
+		if(!files.length) return;
+
 		const src = createFileUrl(files[0]);
 
 		this.editor.applyFormat({src});

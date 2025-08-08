@@ -49,6 +49,11 @@ declare global {
 			options: {
 				alignment: "left" | "right" | "center" | "justify";
 			}
+		},
+		autocomplete: {
+			options: {
+				character: string;
+			}
 		}
 	}
 }

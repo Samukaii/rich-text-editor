@@ -5,9 +5,11 @@ export const requestUserFile = () => {
 
 	return new Promise<File[]>((resolve) => {
 		const onChange = () => {
-			resolve(Array.from(input.files ?? []));
-			document.body.removeEventListener('focusin', onChange);
-			input.removeEventListener('change', onChange);
+			if((input.files?.length ?? 0) > 0) {
+				resolve(Array.from(input.files ?? []));
+				document.body.removeEventListener('focusin', onChange);
+				input.removeEventListener('change', onChange);
+			}
 		};
 
 		input.addEventListener('change', onChange);

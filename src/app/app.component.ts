@@ -55,5 +55,17 @@ export class AppComponent {
 				name: "underlined",
 			},
 		},
+		{
+			matcher: /@.*/g,
+			format: {
+				name: "background-color",
+				options: {
+					color: "red"
+				}
+			},
+			onMatch: (formattedElement) => {
+				console.log(formattedElement);
+			}
+		}
 	];
 }
